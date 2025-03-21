@@ -399,9 +399,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dfbc280de833fb4d9fce32df74c61ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: {fileID: 0}
   player: {fileID: 8412722893144491444}
-  playerSpeed: 12
+  score: {fileID: 0}
+  offset: 0
   hits: []
 --- !u!1 &963194225
 GameObject:
