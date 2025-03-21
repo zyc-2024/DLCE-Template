@@ -12,15 +12,18 @@ namespace DancingLineFanmade.Guidance
         [SerializeField] private Player player;
         [SerializeField] private TextAsset score;
         [SerializeField] private float offset;
-        [SerializeField] private List<float> hits;
 
-        private List<string> hitPoints = new List<string>();
+        [SerializeField] internal List<float> hitTime;
 
-        [Button("Create Guide Taps By Score", ButtonSizes.Large)]
-        private void Create()
+        private readonly List<string> hit1 = new List<string>();
+        private readonly List<List<string>> hit2 = new List<List<string>>();
+
+#if UNITY_EDITOR
+        private void ReadScore()
         {
-            hitPoints.Clear();
-            hits.Clear();
+            hit1.Clear();
+            hit2.Clear();
+            hitTime.Clear();
 
             if (score == null)
             {
@@ -28,29 +31,32 @@ namespace DancingLineFanmade.Guidance
                 return;
             }
 
-            #region Read Score
-
             foreach (var VARIABLE in score.text.Split('\n'))
             {
-                hitPoints.Add(VARIABLE.Trim());
+                hit1.Add(VARIABLE.Trim());
             }
 
-            var index = hitPoints.IndexOf("[HitObjects]");
-            hitPoints.RemoveRange(0, index + 1);
-            hitPoints.RemoveAll(text => text == string.Empty);
+            var index = hit1.IndexOf("[HitObjects]");
+            hit1.RemoveRange(0, index + 1);
+            hit1.RemoveAll(text => text == string.Empty);
 
-            var result = hitPoints.Select(VARIABLE => VARIABLE.Remove(0, 8))
-                .Select(hit => hit.Remove(hit.Length - 13, 13)).ToList();
-            hitPoints = result;
-            foreach (var VARIABLE in hitPoints)
+            foreach (var VARIABLE in hit1)
             {
-                hits.Add(int.Parse(VARIABLE) / 1000f + offset);
+                hit2.Add(VARIABLE.Split(',').ToList());
             }
 
-            #endregion
+            foreach (var VARIABLE in hit2)
+            {
+                hitTime.Add(int.Parse(VARIABLE[2]) / 1000f + offset);
+            }
+        }
 
-            #region Create Guide Boxes
+        [Button("Create Guide Taps By Score", ButtonSizes.Large)]
+        private void Create()
+        {
+            ReadScore();
 
+            if (hitTime.Count <= 0) return;
             var boxPrefab = Resources.Load<GameObject>("Prefabs/GuidanceBox");
             var startPos = player.startPosition;
             var firstDir = player.firstDirection;
@@ -66,7 +72,7 @@ namespace DancingLineFanmade.Guidance
             firstBox.transform.parent = hitParent.transform;
             boxes.Add(firstBox);
 
-            for (var i = 0; i < hits.Count; i++)
+            for (var i = 0; i < hitTime.Count; i++)
             {
                 var focusedBox = Instantiate(boxPrefab, hitParent.transform, true);
                 if (boxes.Count > 0) focusedBox.transform.position = boxes[^1].transform.position;
@@ -81,8 +87,8 @@ namespace DancingLineFanmade.Guidance
 
                 focusedBox.transform.Translate(
                     i == 0
-                        ? new Vector3(0, hits[i] * speed, 0)
-                        : new Vector3(0, (hits[i] - hits[i - 1]) * speed, 0), Space.Self);
+                        ? new Vector3(0, hitTime[i] * speed, 0)
+                        : new Vector3(0, (hitTime[i] - hitTime[i - 1]) * speed, 0), Space.Self);
 
                 boxes.Add(focusedBox);
                 count++;
@@ -97,8 +103,13 @@ namespace DancingLineFanmade.Guidance
                     _ => boxes[i].transform.eulerAngles
                 };
             }
-
-            #endregion
         }
+
+        [Button("Reload Hit Time", ButtonSizes.Large)]
+        private void ReloadHits()
+        {
+            ReadScore();
+        }
+#endif
     }
 }

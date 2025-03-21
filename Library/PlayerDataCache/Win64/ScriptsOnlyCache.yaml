@@ -6,11 +6,14 @@ ScriptsOnlyBuild:
     - DancingLineFanmade.Guidance.GuidanceBox
     - DancingLineFanmade.Guidance.GuidanceController
     - DancingLineFanmade.Guidance.GuidanceEnabled
+    - DancingLineFanmade.Guidance.ScoreReader
     - DancingLineFanmade.Level.CameraFollower
     - DancingLineFanmade.Level.LevelData
     - DancingLineFanmade.Level.Player
     - DancingLineFanmade.Level.PlayerCubes
+    - DancingLineFanmade.Level.PlayerTrailRenderer
     - DancingLineFanmade.Level.TimeScale
+    - DancingLineFanmade.Level.TriggerRenderer
     - DancingLineFanmade.UI.LevelUI
     - DancingLineFanmade.UI.LoadingPage
     - DancingLineFanmade.UI.SetQuality
@@ -19,14 +22,17 @@ ScriptsOnlyBuild:
     - DG.Tweening.Core.DOTweenSettings
     Sirenix.OdinInspector.Editor.dll:
     - Sirenix.OdinInspector.Editor.AttributesExampleWindow
+    - Sirenix.OdinInspector.Editor.GeneralDrawerConfig
     - Sirenix.OdinInspector.Editor.ImportSettingsConfig
     - Sirenix.OdinInspector.Editor.InspectorConfig
+    - Sirenix.OdinInspector.Editor.Modules.OdinModuleConfig
     - Sirenix.Serialization.AOTGenerationConfig
     Sirenix.Serialization.Config.dll:
     - Sirenix.Serialization.GlobalSerializationConfig
     Unity.2D.Sprite.Editor.dll:
     - UnityEditor.U2D.Sprites.SpriteEditorWindow
     Unity.Rider.Editor.dll:
+    - Packages.Rider.Editor.RiderScriptEditorData
     - Packages.Rider.Editor.UnitTesting.CallbackData
     Unity.TextMeshPro.dll:
     - TMPro.TMP_FontAsset
@@ -112,16 +118,16 @@ ScriptsOnlyBuild:
     fullTypeName: DancingLineFanmade.Guidance.GuidanceEnabled
     methodName: OnClick
   - assembly: Assembly-CSharp
-    fullTypeName: DancingLineFanmade.UI.SetQuality
-    methodName: SetLevel
-  - assembly: Assembly-CSharp
-    fullTypeName: DancingLineFanmade.UI.SetQuality
-    methodName: SetLevel
-  - assembly: Assembly-CSharp
     fullTypeName: DancingLineFanmade.Auto.SetAutoPlay
     methodName: SetAuto
+  - assembly: Assembly-CSharp
+    fullTypeName: DancingLineFanmade.UI.SetQuality
+    methodName: SetLevel
+  - assembly: Assembly-CSharp
+    fullTypeName: DancingLineFanmade.UI.SetQuality
+    methodName: SetLevel
   sceneClasses:
-    Assets/#Template/[Scenes]/DefaultScene/Scene.unity:
+    Assets/#Template/[Scenes]/Scene.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -163,63 +169,67 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1570}
-    - Class: 114
       Script: {instanceID: 1572}
     - Class: 114
       Script: {instanceID: 1574}
     - Class: 114
-      Script: {instanceID: 1798}
+      Script: {instanceID: 1576}
     - Class: 114
-      Script: {instanceID: 2146}
+      Script: {instanceID: 1800}
     - Class: 114
-      Script: {instanceID: 2304}
+      Script: {instanceID: 2150}
     - Class: 114
-      Script: {instanceID: 2492}
+      Script: {instanceID: 2306}
     - Class: 114
-      Script: {instanceID: 2666}
+      Script: {instanceID: 2494}
     - Class: 114
-      Script: {instanceID: 2744}
+      Script: {instanceID: 2672}
     - Class: 114
-      Script: {instanceID: 2768}
+      Script: {instanceID: 2750}
     - Class: 114
-      Script: {instanceID: 2918}
+      Script: {instanceID: 2774}
     - Class: 114
-      Script: {instanceID: 2966}
+      Script: {instanceID: 2880}
     - Class: 114
-      Script: {instanceID: 3262}
+      Script: {instanceID: 2926}
     - Class: 114
-      Script: {instanceID: 3422}
+      Script: {instanceID: 2974}
     - Class: 114
-      Script: {instanceID: 3450}
+      Script: {instanceID: 3274}
     - Class: 114
-      Script: {instanceID: 3614}
+      Script: {instanceID: 3434}
     - Class: 114
-      Script: {instanceID: 4148}
+      Script: {instanceID: 3462}
     - Class: 114
-      Script: {instanceID: 4326}
+      Script: {instanceID: 3626}
     - Class: 114
-      Script: {instanceID: 4598}
+      Script: {instanceID: 4160}
     - Class: 114
-      Script: {instanceID: 5216}
+      Script: {instanceID: 4340}
     - Class: 114
-      Script: {instanceID: 5360}
+      Script: {instanceID: 4614}
     - Class: 114
-      Script: {instanceID: 5956}
+      Script: {instanceID: 5378}
     - Class: 114
-      Script: {instanceID: 5968}
+      Script: {instanceID: 5650}
+    - Class: 114
+      Script: {instanceID: 5902}
     - Class: 114
       Script: {instanceID: 5976}
     - Class: 114
-      Script: {instanceID: 6684}
+      Script: {instanceID: 5988}
     - Class: 114
-      Script: {instanceID: 7172}
+      Script: {instanceID: 5996}
     - Class: 114
-      Script: {instanceID: 7450}
+      Script: {instanceID: 6710}
     - Class: 114
-      Script: {instanceID: 8060}
+      Script: {instanceID: 6868}
     - Class: 114
-      Script: {instanceID: 53912}
+      Script: {instanceID: 7200}
+    - Class: 114
+      Script: {instanceID: 7480}
+    - Class: 114
+      Script: {instanceID: 8096}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -259,10 +269,10 @@ ScriptsOnlyBuild:
     className: StandaloneInputModule
   - hash:
       serializedVersion: 2
-      Hash: 699619b86d9359741a4f58540298c80b
+      Hash: bcaee4c2a83047257b5f47d6ed264b75
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
-    className: Text
+    className: Toggle
   - hash:
       serializedVersion: 2
       Hash: a6e561615949734e9f12f9b61661f43e
@@ -373,7 +383,7 @@ ScriptsOnlyBuild:
     className: UnityOnPointerUpMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 91d258529db2b5060a913f2afcea1a21
+      Hash: 4de78781075c75589cdbaad292fb6cff
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner
     className: PlaymodeTestsController
@@ -415,7 +425,7 @@ ScriptsOnlyBuild:
     className: UnityOnBecameVisibleMessageListener
   - hash:
       serializedVersion: 2
-      Hash: e230931327b8ebe6da38ba444a095468
+      Hash: abcab763cf19db138bf982e8f22f05be
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Guidance
     className: GuidanceEnabled
@@ -479,6 +489,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Trigger
     className: SetMaterialColor
+  - hash:
+      serializedVersion: 2
+      Hash: 16ace3dee9226f3f89aa5eba4c79b195
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Guidance
+    className: ScoreReader
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -781,6 +797,12 @@ ScriptsOnlyBuild:
     className: UnityOnJointBreak2DMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Auto
+    className: AutoPlay
+  - hash:
+      serializedVersion: 2
       Hash: 2574ac7d50617d23cdefe4ad22f5e1ad
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
@@ -895,12 +917,6 @@ ScriptsOnlyBuild:
     className: ProjectPathFinder
   - hash:
       serializedVersion: 2
-      Hash: bcaee4c2a83047257b5f47d6ed264b75
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: Toggle
-  - hash:
-      serializedVersion: 2
       Hash: 595e9ce7ea93e68bf717f3fa5c26ffcb
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Trigger
@@ -985,16 +1001,22 @@ ScriptsOnlyBuild:
     className: UnityOnDeselectMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 18459224b8222bbc7afa73e1941279b3
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: DancingLineFanmade.Trigger
-    className: FallPredictor
+      Hash: 699619b86d9359741a4f58540298c80b
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: Text
   - hash:
       serializedVersion: 2
       Hash: 2574ac7d50617d23cdefe4ad22f5e1ad
     assemblyName: Unity.VisualScripting.State.dll
     namespaceName: Unity.VisualScripting
     className: StateGraphAsset
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Auto
+    className: SetAutoPlay
   - hash:
       serializedVersion: 2
       Hash: bba373a14f55c40672edea4abddcb2e3
@@ -1109,6 +1131,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Outline
+  - hash:
+      serializedVersion: 2
+      Hash: 89e045e24ca2ffb1575aac3dd575a896
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Level
+    className: PlayerTrailRenderer
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -1231,6 +1259,12 @@ ScriptsOnlyBuild:
     className: UnityOnMoveMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 4ddbbb0024d74d5f1cb0c340c688a122
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Level
+    className: TrailPredictor
+  - hash:
+      serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -1297,12 +1331,6 @@ ScriptsOnlyBuild:
     className: PlayerCubes
   - hash:
       serializedVersion: 2
-      Hash: 070f64594d450f6cef157f0c5842500c
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: DancingLineFanmade.Trigger
-    className: JumpPredictor
-  - hash:
-      serializedVersion: 2
       Hash: 8220b46879dc5e37db1b940c938f5744
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -1345,17 +1373,11 @@ ScriptsOnlyBuild:
     className: UnityOnSliderValueChangedMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: dcab499231caa990b8c0dc415d991181
     assemblyName: Assembly-CSharp.dll
-    namespaceName: DancingLineFanmade.Auto
-    className: AutoPlay
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: DancingLineFanmade.Auto
-    className: SetAutoPlay
+    namespaceName: DancingLineFanmade.Level
+    className: TriggerRenderer
   platform: 19
   scenePathNames:
-  - Assets/#Template/[Scenes]/DefaultScene/Scene.unity
-  playerPath: C:/Users/Administrator/Desktop/a/DancingLineFanmade.exe
+  - Assets/#Template/[Scenes]/Scene.unity
+  playerPath: C:/Users/Administrator/Desktop/asasasa/DancingLineFanmade.exe

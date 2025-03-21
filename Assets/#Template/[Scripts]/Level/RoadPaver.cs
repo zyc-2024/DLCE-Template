@@ -16,6 +16,7 @@ namespace DancingLineFanmade.Level
         private Transform road;
         private int roadIndex;
 
+#if UNITY_EDITOR
         private void Start()
         {
             player = Player.Instance;
@@ -48,5 +49,6 @@ namespace DancingLineFanmade.Level
                 new Vector3(roadWidth, roadHeight, road.localScale.z + player.Speed * Time.deltaTime);
             road.transform.Translate(Vector3.forward * (0.5f * player.Speed * Time.deltaTime), Space.Self);
         }
+#endif
     }
 }

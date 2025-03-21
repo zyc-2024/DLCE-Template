@@ -46,6 +46,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Teleport.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Pyramid.cs" />
     <Compile Include="Assets\#Template\[Scripts]\GUI\StartPage.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Level\TriggerRenderer.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\Player.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\KillPlayer.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Animator\LocalScaleAnimator.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Level\LevelManager.cs" />
     <Compile Include="Assets\#Template\[Scripts]\GUI\LevelUI.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Camera\CameraTrigger.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Level\PlayerTrailRenderer.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Animator\LocalRotAnimator.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Guidance\GuidanceController.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Speed.cs" />

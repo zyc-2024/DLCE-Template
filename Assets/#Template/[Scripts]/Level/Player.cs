@@ -5,7 +5,6 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DancingLineFanmade.Auto;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
