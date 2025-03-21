@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{214D8D3A-3072-51F1-A035-95A43AA0794D}</ProjectGuid>
+    <ProjectGuid>{21CEA73E-A199-BA7F-F176-01FAB93FB819}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -60,112 +60,82 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\CameraShake.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\CameraShakeTrigger.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\Change_Camera_FOV.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\ChangeCameraBackColor.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\ChangeCameraType.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\ChangeFollowCamera.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\FollowCamera.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\SetClearflag.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Camera\SetSize.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\dis_rotate.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\dis_scale.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\Down_Base.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\follow.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\MovingPos.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\MovingPosMax.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\Mushrooms.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\randommove.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\randommoveonly.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\RatateMax.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\RotateRot.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\ScaleMax.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\ScaleSelf.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\ScaleSiz.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\DoTween\TimeChangeColor.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Ending.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\MainLine.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\PlayAgain.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\PracticeMode.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\RoadMaker.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\ShowSoundTime.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\TaperMaker.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Change_Light_Shadow_Deep.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\ChangeMove.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\ChangeObjMat.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\ChangeSpeed.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\CollisionColor.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Crown.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Diamond.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Ending_Open.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Ending_Trigger.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\GTrigger.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Image_Clolor.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\LineJump.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\OutMap.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\RigidBody_Trigger.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Set_Color.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Set_Color_Light.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Set_Emi_Color.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Set_Lens_Bright.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Set_Light_Shadow.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Set_Light_Type.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Set_Line_Remains_And_Tail.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\SetActive.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\setFogDensity.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\setFogLinear.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\setFogMode.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\StartAni.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\StopSound.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Taper_Turn.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Tapers.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\Teleport.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\TransporterWith.cs" />
-    <Compile Include="Assets\MainAssets\Basic code\Script\Trigger\TurnBlock.cs" />
-    <Compile Include="Assets\MainAssets\Demigiant\DOTween\Examples\Basics.cs" />
-    <Compile Include="Assets\MainAssets\Demigiant\DOTween\Examples\Sequences.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\CanvasAlpha.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\Continue.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\CrownIcon.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\DelPlayerMassage.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\ExitContinue.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\LevelMassage.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\LoadingBlock.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\LowerSetting.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\LRButton.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\MenuSettings.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\Music_Delay_UI.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\openurl.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\OverMenu.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\PlayLevel.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\QualitySetting.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\Quit.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\RelifeShowPer.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\SceneLoader.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\Setting.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\SynMusicDelay.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\ToText.cs" />
-    <Compile Include="Assets\MainAssets\Resources\GameUI\Scripts\Trip.cs" />
-    <None Include="Assets\MainAssets\Demigiant\DOTween\readme.txt" />
-    <None Include="Assets\MainAssets\Demigiant\DOTween\DOTween46.xml" />
-    <None Include="Assets\MainAssets\Resources\Other\CrownIcon.shader" />
-    <None Include="Assets\MainAssets\Demigiant\DOTween\DOTween50.xml" />
-    <None Include="Assets\MainAssets\Demigiant\DOTween\DOTween43.xml" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\AnimationLauncher.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\AnimatorPlayer.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\CameraChanger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\DistanceUp.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\FogChanger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\ImageColorChanger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\LightChanger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\MaterialColorChanger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\MovingPosMax.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\RatateMax.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\ScaleMax.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\AnimationScripts\TransformAnimation.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\ChangeDirection.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\Crown.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\CrownIcon.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\CrownTrigger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\Diamond.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\Ending.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\EndingInvokeTrigger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\EndingOpenTrigger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\GravityChanger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\GuideTap.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\GuideTapMaker.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\JumpTrigger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\LineBase.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\MainLine.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\ObjectFollower.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\RoadMaker.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\ScaleSelf.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\SetActive.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\SetTurnForward.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\SpeedChanger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\BasicScripts\Teleport.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\CameraScripts\CameraFollower.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\CameraScripts\CameraProjectionDynamicChanging.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\CameraScripts\CameraShake.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\CameraScripts\CameraShakeTrigger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\CameraScripts\CameraTrigger.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\CanvasAlpha.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\Continue.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\ExitContinue.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\GameOver.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\LevelInformation.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\LoadingBlock.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\LowerSetting.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\LRButton.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\MenuSettings.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\openurl.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\PlayLevel.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\QualitySetting.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\Quit.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\RevivalPercentage.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\SceneLoader.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\Setting.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\ToText.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\BasicObjects\Scripts\GUIScripts\Trip.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\Demigiant\DOTween\Examples\Basics.cs" />
+    <Compile Include="Assets\MaxIceFlameTemplate\Demigiant\DOTween\Examples\Sequences.cs" />
+    <None Include="Assets\MaxIceFlameTemplate\Demigiant\DOTween\readme.txt" />
+    <None Include="Assets\MaxIceFlameTemplate\Demigiant\DOTween\DOTween46.xml" />
+    <None Include="Assets\MaxIceFlameTemplate\Demigiant\DOTween\DOTween50.xml" />
+    <None Include="Assets\MaxIceFlameTemplate\Demigiant\DOTween\DOTween43.xml" />
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -368,26 +338,26 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween50">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Assets/MainAssets/Demigiant/DOTween/DOTween50.dll</HintPath>
+    <Reference Include="DOTween">
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Assets/MaxIceFlameTemplate/Demigiant/DOTween/DOTween.dll</HintPath>
     </Reference>
     <Reference Include="DOTween43">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Assets/MainAssets/Demigiant/DOTween/DOTween43.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Assets/MainAssets/Demigiant/DOTween/DOTween.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Assets/MaxIceFlameTemplate/Demigiant/DOTween/DOTween43.dll</HintPath>
     </Reference>
     <Reference Include="DOTween46">
-      <HintPath>C:/Users/Administrator/Desktop/冰焰模板2.1.2/Assets/MainAssets/Demigiant/DOTween/DOTween46.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Assets/MaxIceFlameTemplate/Demigiant/DOTween/DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween50">
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Assets/MaxIceFlameTemplate/Demigiant/DOTween/DOTween50.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Editor">
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.StandardEvents">
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Tracker">
+      <HintPath>C:/Users/Administrator/Desktop/冰焰模板3.0.0/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
