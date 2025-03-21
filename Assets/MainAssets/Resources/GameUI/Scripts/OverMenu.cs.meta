@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 14ed066c6eec6e642a1018ad39e68895
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - line: {instanceID: 0}
+  - LevelInfo: {instanceID: 0}
+  - LevelNameZh_CNLabel: {instanceID: 0}
+  - LevelNameEnLabel: {instanceID: 0}
+  - DiamondLabel: {instanceID: 0}
+  - CrownIcon1: {instanceID: 0}
+  - CrownIcon2: {instanceID: 0}
+  - CrownIcon3: {instanceID: 0}
+  - PerCrownIcon1: {instanceID: 0}
+  - PerCrownIcon2: {instanceID: 0}
+  - PerCrownIcon3: {instanceID: 0}
+  - NoLightCrown: {fileID: 2800000, guid: cf670ed501b52ec408dbe9e97fdca44c, type: 3}
+  - LightCrown: {fileID: 2800000, guid: 665cb6e10ebe4c94aa1b78a1d7419a0c, type: 3}
+  - NoLightPerCrown: {fileID: 2800000, guid: 30007dc5a58815a45b9f4aa4c84deb70, type: 3}
+  - LightPerCrown: {fileID: 2800000, guid: e3b956e40884ffd45abe6af67d877b4c, type: 3}
+  - ProgressImage: {instanceID: 0}
+  - ProgressText: {instanceID: 0}
+  - PerfectImage: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
