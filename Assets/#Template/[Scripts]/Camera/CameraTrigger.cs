@@ -1,12 +1,15 @@
+using DancingLineFanmade.Level;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using Sirenix.OdinInspector;
 
-namespace DancingLineFanmade.Level
+namespace DancingLineFanmade.Trigger
 {
     public class CameraTrigger : MonoBehaviour
     {
+        private CameraFollower follower;
+
         [SerializeField] private UnityEvent onFinished = new UnityEvent();
         [SerializeField] private Vector3 offset = Vector3.zero;
         [SerializeField] private Vector3 rotation = new Vector3(54f, 45f, 0f);
@@ -15,23 +18,28 @@ namespace DancingLineFanmade.Level
         [SerializeField, MinValue(0f)] private float duration = 2f;
         [SerializeField] private Ease ease = Ease.InOutSine;
         [SerializeField] private RotateMode mode = RotateMode.FastBeyond360;
-        [SerializeField] private bool triggered = true;
+        [SerializeField] private bool canBeTriggered = true;
+
+        private void OnEnable()
+        {
+            follower = CameraFollower.Instance;
+        }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player") && triggered)
+            if (other.CompareTag("Player") && canBeTriggered)
             {
-                CameraFollower.Instance.follow = follow;
-                CameraFollower.Instance.Trigger(offset, rotation, scale, duration, ease, mode, onFinished);
+                follower.follow = follow;
+                follower.Trigger(offset, rotation, scale, duration, ease, mode, onFinished);
             }
         }
 
         public void Trigger()
         {
-            if (!triggered)
+            if (!canBeTriggered)
             {
-                CameraFollower.Instance.follow = follow;
-                CameraFollower.Instance.Trigger(offset, rotation, scale, duration, ease, mode, onFinished);
+                follower.follow = follow;
+                follower.Trigger(offset, rotation, scale, duration, ease, mode, onFinished);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace DancingLineFanmade.Trigger
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")) light.SetLight(Player.Instance.light, duration, ease);
+            if (other.CompareTag("Player")) light.SetLight(Player.Instance.sceneLight, duration, ease);
         }
     }
 }

@@ -1,6 +1,7 @@
 using DG.Tweening;
 using DancingLineFanmade.Level;
 using UnityEngine;
+using Newtonsoft.Json.Bson;
 
 namespace DancingLineFanmade.Trigger
 {
@@ -37,6 +38,7 @@ namespace DancingLineFanmade.Trigger
                     case TriggerType.Open:
                         left.DOLocalMoveZ(width, duration).SetEase(Ease.Linear);
                         right.DOLocalMoveZ(-width, duration).SetEase(Ease.Linear);
+                        LevelManager.revivePlayer += ResetDoor;
                         break;
                     case TriggerType.Final:
                         CameraFollower.Instance.follow = false;
@@ -50,7 +52,19 @@ namespace DancingLineFanmade.Trigger
 
         private void Complete()
         {
-            LevelManager.GameOver(true);
+            LevelManager.GameOverNormal(true);
+        }
+
+        private void ResetDoor()
+        {
+            LevelManager.revivePlayer -= ResetDoor;
+            left.localPosition = Vector3.zero;
+            right.localPosition = Vector3.zero;
+        }
+
+        private void OnDestroy()
+        {
+            LevelManager.revivePlayer -= ResetDoor;
         }
     }
 }

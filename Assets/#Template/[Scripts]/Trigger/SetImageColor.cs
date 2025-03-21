@@ -1,9 +1,8 @@
+using DancingLineFanmade.Level;
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DancingLineFanmade.Trigger
 {
@@ -17,20 +16,6 @@ namespace DancingLineFanmade.Trigger
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player")) foreach (SingleImage s in images) s.SetColor(duration, ease);
-        }
-    }
-
-    [Serializable]
-    public class SingleImage
-    {
-        public Image image;
-        public Color color = Color.white;
-
-        private List<Tween> tweens = new List<Tween>();
-
-        internal void SetColor(float duration, Ease ease)
-        {
-            tweens.Add(image.DOColor(color, duration).SetEase(ease));
         }
     }
 }

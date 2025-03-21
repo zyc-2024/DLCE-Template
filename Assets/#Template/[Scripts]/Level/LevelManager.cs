@@ -5,9 +5,18 @@ using DG.Tweening;
 using DancingLineFanmade.Trigger;
 using UnityEngine;
 using DancingLineFanmade.UI;
+using UnityEngine.Events;
 
 namespace DancingLineFanmade.Level
 {
+    public delegate void OnPlayerRevive();
+
+    public interface IObjectColor
+    {
+        void GetColor();
+        void SetColor(Color color);
+    }
+
     public enum GameStatus
     {
         Waiting,
@@ -67,11 +76,13 @@ namespace DancingLineFanmade.Level
 #endif
         }
 
-        public static void PlayerDeath(Player player, DieReason reason, GameObject cubes = null, Collision collision = null)
+        public static void PlayerDeath(Player player, DieReason reason, GameObject cubes = null, Collision collision = null, bool revive = false)
         {
             trackFadeOut = AudioManager.FadeOut(0f, 10f);
             CameraFollower.Instance.Kill();
             player.allowTurn = false;
+            foreach (Animator animator in player.stopOnDieAnimators) animator.speed = 0f;
+            foreach (PlayAnimator a in Object.FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (!s.dontRevive) s.StopAnimator();
             switch (reason)
             {
                 case DieReason.Hit:
@@ -89,15 +100,20 @@ namespace DancingLineFanmade.Level
                     break;
             }
             player.percentage = (int)(player.track.time / player.track.clip.length * 100f);
-            GameOver(false);
+            if (!revive) GameOverNormal(false); else GameOverRevive();
         }
 
-        public static void GameOver(bool complete)
+        public static void GameOverNormal(bool complete)
         {
             float percentage = complete ? 1f : AudioManager.Progress;
 
             if (GameState == GameStatus.Died || GameState == GameStatus.Completed || GameState == GameStatus.Moving)
-                LevelUI.Instance.Invoke(percentage, Player.Instance.blockCount);
+                LevelUI.Instance.NormalPage(percentage, Player.Instance.blockCount);
+        }
+
+        public static void GameOverRevive()
+        {
+            if (GameState == GameStatus.Died || GameState == GameStatus.Moving) LevelUI.Instance.RevivePage(AudioManager.Progress);
         }
 
         public static void InitPlayerPosition(Player player, Vector3 position, bool changeDirection, Direction direction = Direction.First)
@@ -108,14 +124,34 @@ namespace DancingLineFanmade.Level
             {
                 switch (direction)
                 {
-                    case Direction.First:
-                        player.transform.eulerAngles = player.firstDirection;
-                        break;
-                    case Direction.Second:
-                        player.transform.eulerAngles = player.secondDirection;
-                        break;
+                    case Direction.First: player.transform.eulerAngles = player.firstDirection; break;
+                    case Direction.Second: player.transform.eulerAngles = player.secondDirection; break;
                 }
             }
+        }
+
+        private static void RevivePlayer()
+        {
+            Debug.Log("Player revived!");
+        }
+
+        public static OnPlayerRevive revivePlayer = RevivePlayer;
+
+        public static void DestroyRemain()
+        {
+            GameState = GameStatus.Waiting;
+            trackFadeOut?.Kill();
+            if (dieCubes) Object.Destroy(dieCubes);
+        }
+
+        public static void CompareCheckpointIndex(int index, UnityAction callback)
+        {
+            if (index > Player.Instance.checkpoints.Count - 1) callback.Invoke();
+        }
+
+        public static bool CompareCheckpointIndex(int index)
+        {
+            if (index > Player.Instance.checkpoints.Count - 1) return true; else return false;
         }
     }
 }

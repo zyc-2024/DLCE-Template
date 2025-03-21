@@ -128,8 +128,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelData: {fileID: 0}
-  camera: {fileID: 0}
-  light: {fileID: 0}
+  sceneCamera: {fileID: 0}
+  sceneLight: {fileID: 0}
+  characterCollider: {fileID: 8412722892886171499}
+  characterMaterial: {fileID: 2100000, guid: 4a9a05847c8609548b12b570d0f8317f, type: 2}
   startPosition: {x: 0, y: 0, z: 0}
   firstDirection: {x: 0, y: 90, z: 0}
   secondDirection: {x: 0, y: 0, z: 0}

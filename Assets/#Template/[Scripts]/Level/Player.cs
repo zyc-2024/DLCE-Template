@@ -1,9 +1,9 @@
 using DancingLineFanmade.Trigger;
 using DancingLineFanmade.UI;
 using DG.Tweening;
-using MaxLine2.UI;
 using Sirenix.OdinInspector;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -14,6 +14,8 @@ namespace DancingLineFanmade.Level
     [DisallowMultipleComponent, RequireComponent(typeof(BoxCollider), typeof(Rigidbody))]
     public class Player : MonoBehaviour
     {
+        private Transform selfTransform;
+
         public static Player Instance { get; private set; }
         public static Rigidbody Rigidbody { get; private set; }
 
@@ -28,32 +30,38 @@ namespace DancingLineFanmade.Level
         [Required("必须选填关卡数据文件")] public LevelData levelData;
 
         [Title("Settings")]
-        public new Camera camera;
-        public new Light light;
+        public Camera sceneCamera;
+        public Light sceneLight;
+        public Material characterMaterial;
         public Vector3 startPosition = Vector3.zero;
         public Vector3 firstDirection = new Vector3(0, 90, 0);
         public Vector3 secondDirection = Vector3.zero;
         public int poolSize = 100;
         public Color debugTextColor = Color.black;
+        public List<Animator> playOnStartAnimators = new List<Animator>();
+        public List<Animator> stopOnDieAnimators = new List<Animator>();
         public bool allowTurn = true;
         public bool noDeath = false;
 
-        internal float speed { get; set; }
+        internal int speed { get; set; }
         internal AudioSource track { get; private set; }
         internal int blockCount { get; set; }
         internal int percentage { get; set; }
         internal UnityEvent onTurn { get; private set; }
+        internal List<Checkpoint> checkpoints { get; set; }
 
+        private BoxCollider characterCollider;
         private Vector3 tailPosition;
         private Transform tail;
         private ObjectPool<Transform> tailPool = new ObjectPool<Transform>();
+        private List<float> startAnimatorProgresses = new List<float>();
         private StartPage startPage;
         private bool debug = true;
         private bool loading = false;
 
         private float TailDistance
         {
-            get => new Vector2(tailPosition.x - transform.position.x, tailPosition.z - transform.position.z).magnitude;
+            get => new Vector2(tailPosition.x - selfTransform.position.x, tailPosition.z - selfTransform.position.z).magnitude;
         }
 
         private bool previousFrameIsGrounded;
@@ -66,7 +74,7 @@ namespace DancingLineFanmade.Level
             {
                 for (int i = 0; i < groundedTestRays.Length; i++)
                 {
-                    groundedTestRays[i].Item2.origin = transform.position + transform.localRotation * groundedTestRays[i].Item1;
+                    groundedTestRays[i].Item2.origin = selfTransform.position + selfTransform.localRotation * groundedTestRays[i].Item1;
                     if (Physics.RaycastNonAlloc(groundedTestRays[i].Item2, groundedTestResults, groundedRayDistance + 0.1f, -257, QueryTriggerInteraction.Ignore) > 0)
                         return false;
                 }
@@ -86,17 +94,21 @@ namespace DancingLineFanmade.Level
             Instance = this;
             Rigidbody = GetComponent<Rigidbody>();
             loading = false;
+            checkpoints = new List<Checkpoint>();
             onTurn = new UnityEvent();
+            selfTransform = transform;
 
-            BoxCollider boxCollider = GetComponent<BoxCollider>();
+            characterCollider = GetComponent<BoxCollider>();
             groundedTestRays = new ValueTuple<Vector3, Ray>[]
             {
-                new ValueTuple<Vector3, Ray>(boxCollider.center - new Vector3(boxCollider.size.x / 2f, boxCollider.size.y / 2f - 0.1f, boxCollider.size.z / 2f), new Ray(Vector3.zero, transform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(boxCollider.center - new Vector3(boxCollider.size.x / -2f, boxCollider.size.y / 2f - 0.1f, boxCollider.size.z / 2f), new Ray(Vector3.zero, transform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(boxCollider.center - new Vector3(boxCollider.size.x / 2f, boxCollider.size.y / 2f - 0.1f, boxCollider.size.z / -2f), new Ray(Vector3.zero, transform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(boxCollider.center - new Vector3(boxCollider.size.x / -2f, boxCollider.size.y / 2f - 0.1f, boxCollider.size.z / -2f), new Ray(Vector3.zero, transform.localRotation * Vector3.down))
+                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * 0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * -0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * 0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * -0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down))
             };
             previousFrameIsGrounded = Falling;
+
+            foreach (Animator animator in playOnStartAnimators) animator.speed = 0f;
 
             LoadingPage.Instance?.Fade(0f, 0.4f);
         }
@@ -115,7 +127,9 @@ namespace DancingLineFanmade.Level
             startPrefab = Resources.Load<GameObject>("Prefabs/StartPage");
             loadingPrefab = Resources.Load<GameObject>("Prefabs/LoadingPage");
 
-            transform.eulerAngles = firstDirection;
+            selfTransform.GetComponent<MeshRenderer>().material = characterMaterial;
+            tailPrefab.GetComponent<MeshRenderer>().material = characterMaterial;
+            selfTransform.eulerAngles = firstDirection;
             LevelManager.GameState = GameStatus.Waiting;
             Instantiate(uiPrefab);
             startPage = Instantiate(startPrefab).GetComponent<StartPage>();
@@ -130,8 +144,9 @@ namespace DancingLineFanmade.Level
                 loading = true;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            if (Input.GetKeyDown(KeyCode.C)) Debug.Log("Click time: " + track.time);
+            if (Input.GetKeyDown(KeyCode.C) && LevelManager.GameState == GameStatus.Playing) Debug.Log("当前时间：" + track.time);
             if (Input.GetKeyDown(KeyCode.D)) debug = !debug;
+            if (Input.GetKeyDown(KeyCode.K) && LevelManager.GameState == GameStatus.Playing) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, null, false);
 #endif
             if (allowTurn && !EventSystem.current.IsPointerOverGameObject())
             {
@@ -141,10 +156,15 @@ namespace DancingLineFanmade.Level
                         if (LevelManager.Clicked && !Falling)
                         {
                             LevelManager.GameState = GameStatus.Playing;
-                            track = AudioManager.PlayClip(levelData.soundTrack, 1f);
+                            if (!track) track = AudioManager.PlayClip(levelData.soundTrack, 1f); else track.Play();
+                            if (playOnStartAnimators != null) foreach (Animator animator in playOnStartAnimators) animator.speed = 1f;
+                            foreach (PlayAnimator a in FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (s.played) s.PlayAnimator();
                             CreateTail();
-                            startPage.Hide();
-                            startPage = null;
+                            if (startPage)
+                            {
+                                startPage.Hide();
+                                startPage = null;
+                            }
                         }
                         break;
                     case GameStatus.Playing: if (LevelManager.Clicked && !Falling) Turn(); break;
@@ -152,13 +172,13 @@ namespace DancingLineFanmade.Level
             }
             if (LevelManager.GameState == GameStatus.Playing || LevelManager.GameState == GameStatus.Moving)
             {
-                transform.Translate(Vector3.forward * speed * Time.deltaTime, Space.Self);
+                selfTransform.Translate(Vector3.forward * speed * Time.deltaTime, Space.Self);
                 if (tail && !Falling)
                 {
-                    tail.position = (tailPosition + transform.position) * 0.5f;
+                    tail.position = (tailPosition + selfTransform.position) * 0.5f;
                     tail.localScale = new Vector3(tail.localScale.x, tail.localScale.y, TailDistance);
-                    tail.position = new Vector3(tail.position.x, transform.position.y, tail.position.z);
-                    tail.LookAt(transform);
+                    tail.position = new Vector3(tail.position.x, selfTransform.position.y, tail.position.z);
+                    tail.LookAt(selfTransform);
                 }
                 if (previousFrameIsGrounded != Falling)
                 {
@@ -167,7 +187,7 @@ namespace DancingLineFanmade.Level
                     else
                     {
                         CreateTail();
-                        Destroy(Instantiate(dustParticle, new Vector3(transform.localPosition.x, transform.localPosition.y - transform.lossyScale.y * 0.5f + 0.2f, transform.localPosition.z), Quaternion.Euler(90f, 0f, 0f)), 2f);
+                        Destroy(Instantiate(dustParticle, new Vector3(selfTransform.localPosition.x, selfTransform.localPosition.y - selfTransform.lossyScale.y * 0.5f + 0.2f, selfTransform.localPosition.z), Quaternion.Euler(90f, 0f, 0f)), 2f);
                     }
                 }
             }
@@ -175,19 +195,23 @@ namespace DancingLineFanmade.Level
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.CompareTag("Obstacle") && !noDeath && LevelManager.GameState == GameStatus.Playing) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision);
+            if (collision.collider.CompareTag("Obstacle") && !noDeath && LevelManager.GameState == GameStatus.Playing)
+            {
+                if (checkpoints == null) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, false);
+                else LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, true);
+            }
         }
 
         internal void Turn()
         {
-            transform.eulerAngles = transform.eulerAngles == firstDirection ? secondDirection : firstDirection;
+            selfTransform.eulerAngles = selfTransform.eulerAngles == firstDirection ? secondDirection : firstDirection;
             CreateTail();
             onTurn.Invoke();
         }
 
         private void CreateTail()
         {
-            Quaternion now = Quaternion.Euler(transform.localEulerAngles);
+            Quaternion now = Quaternion.Euler(selfTransform.localEulerAngles);
             float offset = tailPrefab.transform.localScale.z * 0.5f;
 
             if (tail)
@@ -198,20 +222,45 @@ namespace DancingLineFanmade.Level
                 else offset = -0.5f * Mathf.Tan(Mathf.PI / 180f * ((180f - angle) * 0.5f));
                 Vector3 end = tailPosition + last * Vector3.forward * (TailDistance + offset);
                 tail.position = (tailPosition + end) * 0.5f;
-                tail.position = new Vector3(tail.position.x, transform.position.y, tail.position.z);
+                tail.position = new Vector3(tail.position.x, selfTransform.position.y, tail.position.z);
                 tail.localScale = new Vector3(tail.localScale.x, tail.localScale.y, Vector3.Distance(tailPosition, end));
-                tail.LookAt(transform.position);
+                tail.LookAt(selfTransform.position);
             }
-            tailPosition = transform.position + now * Vector3.back * Mathf.Abs(offset);
+            tailPosition = selfTransform.position + now * Vector3.back * Mathf.Abs(offset);
             if (!tailPool.Full)
             {
-                tail = Instantiate(tailPrefab, transform.position, transform.rotation).transform;
+                tail = Instantiate(tailPrefab, selfTransform.position, selfTransform.rotation).transform;
                 tailPool.Add(tail);
             }
             else
             {
                 tail = tailPool.First();
-                tailPool.MoveToLast(tailPool.First());
+                tailPool.Add(tail);
+            }
+        }
+
+        internal void RevivePlayer(Checkpoint checkpoint)
+        {
+            checkpoint.Revival();
+        }
+
+        internal void ClearPool()
+        {
+            tailPool.DestoryAll();
+            tail = null;
+        }
+
+        internal void GetAnimatorProgresses()
+        {
+            startAnimatorProgresses.Clear();
+            foreach (Animator a in playOnStartAnimators) startAnimatorProgresses.Add(a.GetCurrentAnimatorStateInfo(0).normalizedTime);
+        }
+
+        internal void SetAnimatorProgresses()
+        {
+            for (int a = 0; a < playOnStartAnimators.Count; a++)
+            {
+                playOnStartAnimators[a].Play(playOnStartAnimators[a].GetCurrentAnimatorClipInfo(0)[0].clip.name, 0, startAnimatorProgresses[a]);
             }
         }
 
@@ -227,13 +276,13 @@ namespace DancingLineFanmade.Level
             {
                 GUI.Label(new Rect(10, 10, 120, 50), "关卡进度：" + progress + "%", style);
                 GUI.Label(new Rect(10, 40, 120, 50), "游戏状态：" + LevelManager.GameState, style);
-                GUI.Label(new Rect(10, 70, 120, 50), "线的坐标：" + transform.localPosition, style);
-                GUI.Label(new Rect(10, 100, 120, 50), "线的朝向：" + transform.localEulerAngles, style);
+                GUI.Label(new Rect(10, 70, 120, 50), "线的坐标：" + selfTransform.localPosition, style);
+                GUI.Label(new Rect(10, 100, 120, 50), "线的朝向：" + selfTransform.localEulerAngles, style);
                 GUI.Label(new Rect(10, 130, 120, 50), "已获取方块数量：" + blockCount + "/10", style);
                 GUI.Label(new Rect(10, 160, 120, 50), "相机偏移：" + CameraFollower.Instance.rotator.localPosition, style);
                 GUI.Label(new Rect(10, 190, 120, 50), "相机角度：" + CameraFollower.Instance.rotator.localEulerAngles, style);
                 GUI.Label(new Rect(10, 220, 120, 50), "相机缩放：" + CameraFollower.Instance.scale.localScale, style);
-                GUI.Label(new Rect(10, 250, 120, 50), "视场大小：" + camera.fieldOfView, style);
+                GUI.Label(new Rect(10, 250, 120, 50), "视场大小：" + sceneCamera.fieldOfView, style);
             }
         }
 #endif

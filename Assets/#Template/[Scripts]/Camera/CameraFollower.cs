@@ -8,6 +8,8 @@ namespace DancingLineFanmade.Level
     [DisallowMultipleComponent]
     public class CameraFollower : MonoBehaviour
     {
+        private Transform selfTransform;
+
         public static CameraFollower Instance { get; private set; }
 
         [SerializeField] private Transform target;
@@ -22,25 +24,29 @@ namespace DancingLineFanmade.Level
         private Tween offset;
         private Tween rotation;
         private Tween zoom;
+        private Tween shake;
+
+        private float shakePower { get; set; }
 
         private void Awake()
         {
             Instance = this;
+            selfTransform = transform;
         }
 
         private void Start()
         {
-            rotator = transform.GetChild(0);
+            rotator = selfTransform.GetChild(0);
             scale = rotator.GetChild(0);
         }
 
         private void Update()
         {
-            Vector3 translation = target.position - transform.position;
+            Vector3 translation = target.position - selfTransform.position;
             if (LevelManager.GameState == GameStatus.Playing && follow)
             {
-                if (smooth) transform.Translate(new Vector3(translation.x * followSpeed.x * Time.deltaTime, translation.y * followSpeed.y * Time.deltaTime, translation.z * followSpeed.z * Time.deltaTime));
-                else transform.position = target.position;
+                if (smooth) selfTransform.Translate(new Vector3(translation.x * followSpeed.x * Time.deltaTime, translation.y * followSpeed.y * Time.deltaTime, translation.z * followSpeed.z * Time.deltaTime));
+                else selfTransform.position = target.position;
             }
         }
 
@@ -88,6 +94,29 @@ namespace DancingLineFanmade.Level
             }
             zoom = this.scale.DOScale(scale, duration).SetEase(ease);
         }
+
+        public void Shake(float power = 1f, float duration = 3f)
+        {
+            if (shake != null)
+            {
+                shake.Kill();
+                shake = null;
+            }
+            shake = DOTween.To(() => shakePower, x => shakePower = x, power, duration * 0.5f).SetEase(Ease.Linear);
+            shake.SetLoops(2, LoopType.Yoyo);
+            shake.OnUpdate(new TweenCallback(ShakeUpdate));
+            shake.OnComplete(new TweenCallback(ShakeFinished));
+        }
+
+        private void ShakeUpdate()
+        {
+            scale.transform.localPosition = new Vector3(UnityEngine.Random.value * shakePower, UnityEngine.Random.value * shakePower, UnityEngine.Random.value * shakePower);
+        }
+
+        private void ShakeFinished()
+        {
+            scale.transform.localPosition = Vector3.zero;
+        }
     }
 
     [Serializable]
@@ -100,20 +129,23 @@ namespace DancingLineFanmade.Level
 
         internal CameraSettings GetCamera()
         {
-            CameraSettings c = new CameraSettings();
-            c.offset = CameraFollower.Instance.rotator.localPosition;
-            c.rotation = CameraFollower.Instance.rotator.localEulerAngles;
-            c.scale = CameraFollower.Instance.scale.localScale;
-            c.follow = CameraFollower.Instance.follow;
-            return c;
+            CameraSettings settings = new CameraSettings();
+            CameraFollower follower = CameraFollower.Instance;
+            settings.offset = follower.rotator.localPosition;
+            settings.rotation = follower.rotator.localEulerAngles;
+            settings.scale = follower.scale.localScale;
+            settings.follow = follower.follow;
+            return settings;
         }
 
         internal void SetCamera()
         {
-            CameraFollower.Instance.rotator.localPosition = offset;
-            CameraFollower.Instance.rotator.localEulerAngles = rotation;
-            CameraFollower.Instance.scale.localScale = scale;
-            CameraFollower.Instance.follow = follow;
+            CameraFollower follower = CameraFollower.Instance;
+            follower.rotator.localPosition = offset;
+            follower.rotator.localEulerAngles = rotation;
+            follower.scale.localScale = scale;
+            follower.scale.localPosition = Vector3.zero;
+            follower.follow = follow;
         }
     }
 }

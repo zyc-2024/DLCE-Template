@@ -9,6 +9,11 @@ namespace DancingLineFanmade.Guidance
     [DisallowMultipleComponent]
     public class GuidanceController : MonoBehaviour
     {
+        public static GuidanceController Instance { get; private set; }
+
+        private Player player;
+        private Transform playerTransform;
+
         [Title("Creating")]
         [SerializeField] private bool createBoxes = false;
         [SerializeField] private bool createLines = true;
@@ -28,6 +33,8 @@ namespace DancingLineFanmade.Guidance
 
         private void Awake()
         {
+            Instance = this;
+
             id = 0;
             boxPrefab = Resources.Load<GameObject>("Prefabs/GuidanceBox");
             linePrefab = Resources.Load<GameObject>("Prefabs/GuidanceLine");
@@ -39,23 +46,26 @@ namespace DancingLineFanmade.Guidance
 
         private void Start()
         {
+            player = Player.Instance;
+            playerTransform = player.transform;
+
             if (createBoxes)
             {
-                GameObject box = Instantiate(boxPrefab, Player.Instance.transform.position - new Vector3(0f, 0.45f, 0f), Quaternion.Euler(90, Player.Instance.firstDirection.y, 0));
+                GameObject box = Instantiate(boxPrefab, playerTransform.position - new Vector3(0f, 0.45f, 0f), Quaternion.Euler(90, player.firstDirection.y, 0));
                 box.transform.parent = holder;
-                box.name = "OriginalGuidanceBox ";
+                box.name = "OriginalGuidanceBox";
                 box.GetComponent<GuidanceBox>().canBeTriggered = false;
             }
         }
 
         private void Update()
         {
-            forward = Player.Instance.transform.eulerAngles.y == Player.Instance.firstDirection.y ? Player.Instance.secondDirection.y : Player.Instance.firstDirection.y;
+            forward = playerTransform.eulerAngles.y == player.firstDirection.y ? player.secondDirection.y : player.firstDirection.y;
             if (createBoxes && LevelManager.GameState == GameStatus.Playing && !started)
             {
-                Player.Instance.onTurn.AddListener(() =>
+                player.onTurn.AddListener(() =>
                 {
-                    GameObject box = Instantiate(boxPrefab, Player.Instance.transform.position - new Vector3(0f, 0.45f, 0f), Quaternion.Euler(90, forward, 0));
+                    GameObject box = Instantiate(boxPrefab, player.transform.position - new Vector3(0f, 0.45f, 0f), Quaternion.Euler(90, forward, 0));
                     box.transform.parent = holder;
                     box.name = "GuidanceBox " + id;
                     id++;

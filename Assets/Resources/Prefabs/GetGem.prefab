@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1555213631443068919}
   - component: {fileID: 1555213631443072102}
   - component: {fileID: 1555213631443072239}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Spot
   m_TagString: SpritesParticles
   m_Icon: {fileID: 0}
@@ -5046,7 +5046,7 @@ GameObject:
   - component: {fileID: 1555213631443068918}
   - component: {fileID: 1555213631443072101}
   - component: {fileID: 1555213631443072238}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Light
   m_TagString: SpritesParticles
   m_Icon: {fileID: 0}
@@ -9874,7 +9874,7 @@ GameObject:
   - component: {fileID: 1555213631443068960}
   - component: {fileID: 1555213631443072089}
   - component: {fileID: 1555213631443072194}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GetGem
   m_TagString: Untagged
   m_Icon: {fileID: 0}

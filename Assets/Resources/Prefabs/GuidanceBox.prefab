@@ -98,5 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerDistance: 1
-  appearDistance: 24
-  hasLine: 1
+  appearDistance: 576
+  canBeTriggered: 1
+  haveLine: 1

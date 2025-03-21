@@ -13,7 +13,7 @@ namespace DancingLineFanmade.Trigger
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")) fog.SetFog(Player.Instance.camera, duration, ease);
+            if (other.CompareTag("Player")) fog.SetFog(Player.Instance.sceneCamera, duration, ease);
         }
     }
 }

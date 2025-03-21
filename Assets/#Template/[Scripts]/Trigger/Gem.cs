@@ -8,9 +8,11 @@ namespace DancingLineFanmade.Trigger
     {
         [SerializeField] private bool fake = false;
 
+        private Player player;
         private GameObject effectPrefab;
         private GameObject effect;
         private bool got = false;
+        private int index;
 
         private MeshRenderer MeshRenderer
         {
@@ -21,6 +23,7 @@ namespace DancingLineFanmade.Trigger
         {
             MeshRenderer.enabled = true;
             effectPrefab = Resources.Load<GameObject>("Prefabs/GetGem");
+            player = Player.Instance;
         }
 
         private void Update()
@@ -34,9 +37,27 @@ namespace DancingLineFanmade.Trigger
             {
                 got = true;
                 MeshRenderer.enabled = false;
+                index = player.checkpoints.Count;
                 if (QualitySettings.GetQualityLevel() > 0) effect = Instantiate(effectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
-                Player.Instance.blockCount++;
+                player.blockCount++;
+                LevelManager.revivePlayer += ResetData;
             }
+        }
+
+        private void ResetData()
+        {
+            LevelManager.revivePlayer -= ResetData;
+            LevelManager.CompareCheckpointIndex(index, () =>
+            {
+                got = false;
+                MeshRenderer.enabled = true;
+            });
+            if (effect) Destroy(effect);
+        }
+
+        private void OnDestroy()
+        {
+            LevelManager.revivePlayer -= ResetData;
         }
     }
 }

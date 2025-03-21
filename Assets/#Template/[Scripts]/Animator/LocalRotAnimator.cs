@@ -3,7 +3,7 @@ using DancingLineFanmade.Level;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace DancingLineFanmade.Animator
+namespace DancingLineFanmade.Animated
 {
     public class LocalRotAnimator : AnimatorBase
     {
@@ -14,25 +14,37 @@ namespace DancingLineFanmade.Animator
         {
             switch (transformType)
             {
-                case TransformType.New:
-                    finalTransform = rotation;
-                    break;
-                case TransformType.Add:
-                    finalTransform = originalTransform + rotation;
-                    break;
+                case TransformType.New: finalTransform = rotation; break;
+                case TransformType.Add: finalTransform = originalTransform + rotation; break;
             }
             InitTransform(AnimatorType.Rotation);
-            if (timeTrigger) InitTime();
+            if (triggeredByTime) InitTime();
         }
 
         private void Update()
         {
-            if (!finished && LevelManager.GameState == GameStatus.Playing && AudioManager.Time > triggerTime && timeTrigger) Trigger();
+            if (!finished && LevelManager.GameState == GameStatus.Playing && AudioManager.Time > triggerTime && triggeredByTime) Trigger();
         }
 
         public void Trigger()
         {
             TriggerAnimator(AnimatorType.Rotation, rotateMode);
+            if (!dontRevive) LevelManager.revivePlayer += ResetData;
+        }
+
+        private void ResetData()
+        {
+            LevelManager.revivePlayer -= ResetData;
+            LevelManager.CompareCheckpointIndex(index, () =>
+            {
+                InitTransform(AnimatorType.Rotation);
+                finished = false;
+            });
+        }
+
+        private void OnDestroy()
+        {
+            LevelManager.revivePlayer -= ResetData;
         }
 
 #if UNITY_EDITOR

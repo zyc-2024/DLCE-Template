@@ -76,6 +76,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetFog.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Gem.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\CheckpointTrigger.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Level\RoadPaver.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\Percentage.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Animator\AnimatorBase.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\EventTrigger.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Level\AudioManager.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\PlayAnimator.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetImageColor.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Camera\CameraShakeTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\#Template\[Materials]\Shaders\PlaneFog.shader" />

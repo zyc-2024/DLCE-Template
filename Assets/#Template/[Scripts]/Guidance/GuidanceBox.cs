@@ -6,14 +6,20 @@ namespace DancingLineFanmade.Guidance
     [DisallowMultipleComponent]
     public class GuidanceBox : MonoBehaviour
     {
-        [SerializeField] private float triggerDistance;
-        [SerializeField] private float appearDistance;
+        private Transform playerTransform;
+        private Transform selfTransform;
+
+        [SerializeField] private float triggerDistance = 1f;
+        [SerializeField] private float appearDistance = 576f;
         [SerializeField] internal bool canBeTriggered = true;
         [SerializeField] internal bool haveLine = true;
 
         private SpriteRenderer spriteRenderer;
-        private bool used = false;
         private GameObject triggerEffect;
+
+        [SerializeField] internal bool triggered = false;
+        [SerializeField] private int index;
+        [SerializeField] internal bool added = false;
 
         public SpriteRenderer Renderer
         {
@@ -26,7 +32,7 @@ namespace DancingLineFanmade.Guidance
 
         private float Distance
         {
-            get => (transform.position - Player.Instance.transform.position).magnitude;
+            get => (selfTransform.position - playerTransform.position).sqrMagnitude;
         }
 
         public void SetColor(Color color)
@@ -36,35 +42,56 @@ namespace DancingLineFanmade.Guidance
 
         private void Start()
         {
+            playerTransform = Player.Instance.transform;
+            selfTransform = transform;
+
             triggerEffect = Resources.Load<GameObject>("Prefabs/Triggered");
             if (Distance > appearDistance) Disappear(false);
         }
 
         private void Update()
         {
-            if (!used && Distance <= appearDistance) Appear(false);
-            if (LevelManager.Clicked && !used && Distance <= triggerDistance && canBeTriggered) Trigger();
+            if (!triggered && Distance <= appearDistance) Appear(false);
+            if (LevelManager.Clicked && !triggered && Distance <= triggerDistance && canBeTriggered && LevelManager.GameState == GameStatus.Playing)
+                Trigger();
         }
 
         private void Trigger()
         {
-            used = true;
+            triggered = true;
             Disappear(true);
-            Destroy(Instantiate(triggerEffect, transform.position, Quaternion.Euler(Vector3.zero)), 1f);
+            Destroy(Instantiate(triggerEffect, selfTransform.position, Quaternion.Euler(Vector3.zero)), 1f);
         }
 
-        private void Appear(bool onlyBox)
+        internal void Appear(bool onlyBox)
         {
-            SpriteRenderer[] renderers = transform.GetComponentsInChildren<SpriteRenderer>();
-            if (!onlyBox) foreach (SpriteRenderer r in renderers) r.enabled = true;
-            else Renderer.enabled = true;
+            if (!added)
+            {
+                added = true;
+                index = Player.Instance.checkpoints.Count;
+                SpriteRenderer[] renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
+                if (!onlyBox) foreach (SpriteRenderer r in renderers) r.enabled = true; else Renderer.enabled = true;
+                LevelManager.revivePlayer += ResetData;
+            }
         }
 
-        private void Disappear(bool onlyBox)
+        internal void Disappear(bool onlyBox)
         {
-            SpriteRenderer[] renderers = transform.GetComponentsInChildren<SpriteRenderer>();
-            if (!onlyBox) foreach (SpriteRenderer r in renderers) r.enabled = false;
-            else Renderer.enabled = false;
+            SpriteRenderer[] renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
+            if (!onlyBox) foreach (SpriteRenderer r in renderers) r.enabled = false; else Renderer.enabled = false;
+        }
+
+        private void ResetData()
+        {
+            LevelManager.revivePlayer -= ResetData;
+            Disappear(false);
+            added = false;
+            triggered = false;
+        }
+
+        private void OnDestroy()
+        {
+            LevelManager.revivePlayer -= ResetData;
         }
     }
 }

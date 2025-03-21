@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace MaxLine2.UI
+namespace DancingLineFanmade.UI
 {
     [DisallowMultipleComponent]
     public class LoadingPage : MonoBehaviour
