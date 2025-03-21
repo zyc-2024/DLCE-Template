@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 namespace DancingLineFanmade.Level
@@ -45,8 +44,8 @@ namespace DancingLineFanmade.Level
 
         internal int speed { get; set; }
         internal AudioSource track { get; private set; }
+        internal int trackProgress { get; set; }
         internal int blockCount { get; set; }
-        internal int percentage { get; set; }
         internal UnityEvent onTurn { get; private set; }
         internal List<Checkpoint> checkpoints { get; set; }
 
@@ -82,6 +81,11 @@ namespace DancingLineFanmade.Level
             }
         }
 
+        private int frame;
+        private float lastTime;
+        private float fps;
+        private const float timeInterval = 0.1f;
+
         private void Awake()
         {
             if (!levelData)
@@ -111,6 +115,8 @@ namespace DancingLineFanmade.Level
             foreach (Animator animator in playOnStartAnimators) animator.speed = 0f;
 
             LoadingPage.Instance?.Fade(0f, 0.4f);
+
+            lastTime = Time.realtimeSinceStartup;
         }
 
         private void Start()
@@ -147,8 +153,10 @@ namespace DancingLineFanmade.Level
             if (Input.GetKeyDown(KeyCode.C) && LevelManager.GameState == GameStatus.Playing) Debug.Log("当前时间：" + track.time);
             if (Input.GetKeyDown(KeyCode.D)) debug = !debug;
             if (Input.GetKeyDown(KeyCode.K) && LevelManager.GameState == GameStatus.Playing) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, null, false);
+
+            GetFrame();
 #endif
-            if (allowTurn && !EventSystem.current.IsPointerOverGameObject())
+            if (allowTurn && !LevelManager.IsPointedOnUI())
             {
                 switch (LevelManager.GameState)
                 {
@@ -191,13 +199,14 @@ namespace DancingLineFanmade.Level
                     }
                 }
             }
+            if (LevelManager.GameState == GameStatus.Playing) trackProgress = track ? (int)(AudioManager.Progress * 100) : 0;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.collider.CompareTag("Obstacle") && !noDeath && LevelManager.GameState == GameStatus.Playing)
             {
-                if (checkpoints == null) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, false);
+                if (checkpoints.Count <= 0) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, false);
                 else LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, true);
             }
         }
@@ -265,24 +274,37 @@ namespace DancingLineFanmade.Level
         }
 
 #if UNITY_EDITOR
+        private void GetFrame()
+        {
+            frame++;
+            if (Time.realtimeSinceStartup - lastTime < timeInterval) return;
+
+            float time = Time.realtimeSinceStartup - lastTime;
+            fps = frame / time;
+
+            lastTime = Time.realtimeSinceStartup;
+            frame = 0;
+        }
+
         private void OnGUI()
         {
             GUIStyle style = new GUIStyle();
             style.normal.textColor = debugTextColor;
             style.fontSize = 25;
-            int progress = track ? (int)(track.time / track.clip.length * 100f) : 0;
 
+            int finalFps = fps > 999f ? 999 : (int)fps;
             if (debug)
             {
-                GUI.Label(new Rect(10, 10, 120, 50), "关卡进度：" + progress + "%", style);
-                GUI.Label(new Rect(10, 40, 120, 50), "游戏状态：" + LevelManager.GameState, style);
-                GUI.Label(new Rect(10, 70, 120, 50), "线的坐标：" + selfTransform.localPosition, style);
-                GUI.Label(new Rect(10, 100, 120, 50), "线的朝向：" + selfTransform.localEulerAngles, style);
-                GUI.Label(new Rect(10, 130, 120, 50), "已获取方块数量：" + blockCount + "/10", style);
-                GUI.Label(new Rect(10, 160, 120, 50), "相机偏移：" + CameraFollower.Instance.rotator.localPosition, style);
-                GUI.Label(new Rect(10, 190, 120, 50), "相机角度：" + CameraFollower.Instance.rotator.localEulerAngles, style);
-                GUI.Label(new Rect(10, 220, 120, 50), "相机缩放：" + CameraFollower.Instance.scale.localScale, style);
-                GUI.Label(new Rect(10, 250, 120, 50), "视场大小：" + sceneCamera.fieldOfView, style);
+                GUI.Label(new Rect(10, 10, 120, 50), "FPS：" + finalFps, style);
+                GUI.Label(new Rect(10, 40, 120, 50), "关卡进度：" + trackProgress + "%", style);
+                GUI.Label(new Rect(10, 70, 120, 50), "游戏状态：" + LevelManager.GameState, style);
+                GUI.Label(new Rect(10, 100, 120, 50), "线的坐标：" + selfTransform.localPosition, style);
+                GUI.Label(new Rect(10, 130, 120, 50), "线的朝向：" + selfTransform.localEulerAngles, style);
+                GUI.Label(new Rect(10, 160, 120, 50), "已获取方块数量：" + blockCount + "/10", style);
+                GUI.Label(new Rect(10, 190, 120, 50), "相机偏移：" + CameraFollower.Instance.rotator.localPosition, style);
+                GUI.Label(new Rect(10, 220, 120, 50), "相机角度：" + CameraFollower.Instance.rotator.localEulerAngles, style);
+                GUI.Label(new Rect(10, 250, 120, 50), "相机缩放：" + CameraFollower.Instance.scale.localScale, style);
+                GUI.Label(new Rect(10, 280, 120, 50), "视场大小：" + sceneCamera.fieldOfView, style);
             }
         }
 #endif

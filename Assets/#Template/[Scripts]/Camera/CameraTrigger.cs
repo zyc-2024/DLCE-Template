@@ -20,7 +20,7 @@ namespace DancingLineFanmade.Trigger
         [SerializeField] private RotateMode mode = RotateMode.FastBeyond360;
         [SerializeField] private bool canBeTriggered = true;
 
-        private void OnEnable()
+        private void Start()
         {
             follower = CameraFollower.Instance;
         }

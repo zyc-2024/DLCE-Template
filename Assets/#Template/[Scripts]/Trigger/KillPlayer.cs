@@ -27,7 +27,7 @@ namespace DancingLineFanmade.Trigger
         {
             if (other.CompareTag("Player") && !player.noDeath && LevelManager.GameState == GameStatus.Playing)
             {
-                if (player.checkpoints == null) LevelManager.PlayerDeath(player, reason, Resources.Load<GameObject>("Prefabs/Remain"), null, false);
+                if (player.checkpoints.Count <= 0) LevelManager.PlayerDeath(player, reason, Resources.Load<GameObject>("Prefabs/Remain"), null, false);
                 else LevelManager.PlayerDeath(player, reason, Resources.Load<GameObject>("Prefabs/Remain"), null, true);
             }
         }

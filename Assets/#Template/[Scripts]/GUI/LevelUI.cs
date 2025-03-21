@@ -1,6 +1,5 @@
 using DancingLineFanmade.Level;
 using DG.Tweening;
-using Newtonsoft.Json.Bson;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,19 +18,19 @@ namespace DancingLineFanmade.UI
         [SerializeField] private Text percentage;
         [SerializeField] private Text block;
         [SerializeField] private Image background;
-        [SerializeField] private CanvasGroup normalAlpha;
         [SerializeField] private RectTransform barFill;
         [SerializeField] private RectTransform moveUpPart;
         [SerializeField] private RectTransform moveDownPart;
+        [SerializeField] private List<CanvasGroup> normalAlpha = new List<CanvasGroup>();
         [SerializeField] private List<Button> buttons = new List<Button>();
 
         [Title("Revive")]
         [SerializeField] private Text percentageRevive;
-        [SerializeField] private CanvasGroup reviveAlpha;
         [SerializeField] private RectTransform barFillRevive;
         [SerializeField] private RectTransform moveUpRevive;
         [SerializeField] private RectTransform moveDownRevive;
         [SerializeField] private Image hideScreenImage;
+        [SerializeField] private List<CanvasGroup> reviveAlpha = new List<CanvasGroup>();
         [SerializeField] private List<Button> buttonsRevive = new List<Button>();
 
         private Player player;
@@ -47,8 +46,8 @@ namespace DancingLineFanmade.UI
             moveUpRevive.anchoredPosition = new Vector2(0f, -250f);
             moveDownRevive.anchoredPosition = new Vector2(0f, 260f);
 
-            normalAlpha.alpha = 0f;
-            reviveAlpha.alpha = 0f;
+            foreach (CanvasGroup group in normalAlpha) group.alpha = 0f;
+            foreach (CanvasGroup group in reviveAlpha) group.alpha = 0f;
             background.color = Color.clear;
 
             foreach (Button b in buttons) b.interactable = false;
@@ -74,7 +73,7 @@ namespace DancingLineFanmade.UI
                 moveUpPart.DOAnchorPos(Vector2.zero, 0.4f).SetEase(Ease.OutSine);
                 moveDownPart.DOAnchorPos(Vector2.zero, 0.4f).SetEase(Ease.OutSine);
                 background.DOFade(0.64f, 0.4f).SetEase(Ease.Linear).OnComplete(() => { foreach (Button b in buttons) b.interactable = true; });
-                normalAlpha.DOFade(1f, 0.4f).SetEase(Ease.Linear);
+                foreach (CanvasGroup c in normalAlpha) c.DOFade(1f, 0.4f).SetEase(Ease.Linear);
                 barFill.sizeDelta = new Vector2(10f, 18f) + new Vector2(480f * percent, 0f);
                 percentage.text = ((int)(percent * 100f)).ToString() + "%";
                 block.text = blockCount + "/10";
@@ -85,7 +84,7 @@ namespace DancingLineFanmade.UI
                 moveUpRevive.DOAnchorPos(Vector2.zero, 0.4f).SetEase(Ease.OutSine);
                 moveDownRevive.DOAnchorPos(Vector2.zero, 0.4f).SetEase(Ease.OutSine);
                 background.DOFade(0.64f, 0.4f).SetEase(Ease.Linear).OnComplete(() => { foreach (Button b in buttonsRevive) b.interactable = true; });
-                reviveAlpha.DOFade(1f, 0.4f).SetEase(Ease.Linear);
+                foreach (CanvasGroup c in reviveAlpha) c.DOFade(1f, 0.4f).SetEase(Ease.Linear);
                 barFillRevive.sizeDelta = new Vector2(10f, 18f) + new Vector2(480f * percent, 0f);
                 percentageRevive.text = ((int)(percent * 100f)).ToString() + "%";
             }
@@ -111,8 +110,8 @@ namespace DancingLineFanmade.UI
 
             moveUpRevive.DOAnchorPos(new Vector2(0f, -250f), 0.4f).SetEase(Ease.OutSine);
             moveDownRevive.DOAnchorPos(new Vector2(0f, 260f), 0.4f).SetEase(Ease.OutSine);
-            reviveAlpha.DOFade(0f, 0.4f).SetEase(Ease.Linear);
-            normalAlpha.DOFade(1f, 0.4f).SetEase(Ease.Linear);
+            foreach (CanvasGroup c in reviveAlpha) c.DOFade(0f, 0.4f).SetEase(Ease.Linear);
+            foreach (CanvasGroup c in normalAlpha) c.DOFade(1f, 0.4f).SetEase(Ease.Linear);
         }
 
         internal void HideScreen(Color color, float duration, UnityAction fadeIn, UnityAction fadeOut)
@@ -136,8 +135,8 @@ namespace DancingLineFanmade.UI
             moveUpRevive.anchoredPosition = new Vector2(0f, -250f);
             moveDownRevive.anchoredPosition = new Vector2(0f, 260f);
 
-            normalAlpha.alpha = 0f;
-            reviveAlpha.alpha = 0f;
+            foreach (CanvasGroup group in normalAlpha) group.alpha = 0f;
+            foreach (CanvasGroup group in reviveAlpha) group.alpha = 0f;
             background.color = Color.clear;
 
             foreach (Button b in buttons) b.interactable = false;

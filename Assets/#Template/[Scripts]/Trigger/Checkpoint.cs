@@ -46,6 +46,7 @@ namespace DancingLineFanmade.Trigger
 
         private int index = 0;
         private float trackTime;
+        private int trackProgress;
         private int playerSpeed;
         private Vector3 sceneGravity;
         private Vector3 playerFirstDirection;
@@ -90,6 +91,7 @@ namespace DancingLineFanmade.Trigger
             foreach (SingleImage s in imageColorsAuto) s.GetColor();
 
             trackTime = AudioManager.Time;
+            trackProgress = player.trackProgress;
             playerSpeed = player.speed;
             sceneGravity = Physics.gravity;
             playerFirstDirection = player.firstDirection;
@@ -109,8 +111,13 @@ namespace DancingLineFanmade.Trigger
                     LevelManager.revivePlayer.Invoke();
                     LevelManager.DestroyRemain();
                     core.gameObject.SetActive(false);
+                    Player.Rigidbody.isKinematic = true;
                 },
-                () => player.allowTurn = true);
+                () =>
+                {
+                    Player.Rigidbody.isKinematic = false;
+                    player.allowTurn = true;
+                });
         }
 
         private void ResetScene()
@@ -126,6 +133,7 @@ namespace DancingLineFanmade.Trigger
 
             player.track.Stop();
             player.track.time = trackTime;
+            player.trackProgress = trackProgress;
             player.track.volume = 1f;
             player.ClearPool();
             player.blockCount = 0;

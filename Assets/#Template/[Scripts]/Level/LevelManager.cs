@@ -6,6 +6,8 @@ using DancingLineFanmade.Trigger;
 using UnityEngine;
 using DancingLineFanmade.UI;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 namespace DancingLineFanmade.Level
 {
@@ -99,7 +101,6 @@ namespace DancingLineFanmade.Level
                     GameState = GameStatus.Moving;
                     break;
             }
-            player.percentage = (int)(player.track.time / player.track.clip.length * 100f);
             if (!revive) GameOverNormal(false); else GameOverRevive();
         }
 
@@ -152,6 +153,48 @@ namespace DancingLineFanmade.Level
         public static bool CompareCheckpointIndex(int index)
         {
             if (index > Player.Instance.checkpoints.Count - 1) return true; else return false;
+        }
+
+        public static void SetFPSLimit(int frame)
+        {
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = frame;
+        }
+
+        public static bool IsPointedOnUI()
+        {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            int touchCount = Input.touchCount;
+            if (touchCount == 1)
+            {
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    if (EventSystem.current.IsPointerOverGameObject(touch.fingerId) || CheckRaycastObjects(touch.position)) return true;
+                    else return false;
+                }
+                else return false;
+            }
+            else return false;
+#else
+            if (Clicked)
+            {
+                if (EventSystem.current.IsPointerOverGameObject() && CheckRaycastObjects(Input.mousePosition)) return true;
+                else return false;
+            }
+            else return false;
+#endif
+        }
+
+        private static bool CheckRaycastObjects(Vector3 position)
+        {
+            PointerEventData data = new PointerEventData(EventSystem.current);
+            data.pressPosition = new Vector2(position.x, position.y);
+            data.position = new Vector2(position.x, position.y);
+
+            var results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(data, results);
+            return results.Count > 0;
         }
     }
 }

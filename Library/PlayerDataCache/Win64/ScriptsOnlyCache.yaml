@@ -19,6 +19,7 @@ ScriptsOnlyBuild:
     - Sirenix.OdinInspector.Editor.AttributesExampleWindow
     - Sirenix.OdinInspector.Editor.ImportSettingsConfig
     - Sirenix.OdinInspector.Editor.InspectorConfig
+    - Sirenix.OdinInspector.Editor.Modules.OdinModuleConfig
     - Sirenix.Serialization.AOTGenerationConfig
     Sirenix.Serialization.Config.dll:
     - Sirenix.Serialization.GlobalSerializationConfig
@@ -38,10 +39,8 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -188,7 +187,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4592}
     - Class: 114
-      Script: {instanceID: 5350}
+      Script: {instanceID: 5352}
     - Class: 114
       Script: {instanceID: 5946}
     - Class: 114
@@ -822,6 +821,12 @@ ScriptsOnlyBuild:
     className: Percentage
   - hash:
       serializedVersion: 2
+      Hash: a6795116259533108f0508a48d358555
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Trigger
+    className: CameraShakeTrigger
+  - hash:
+      serializedVersion: 2
       Hash: 7c74f2062b9ac143fb07308f86337b29
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Animated
@@ -1026,7 +1031,7 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: e1bd4a55d859e1774aa982f7e4ef4e8c
+      Hash: a58ffebb09339894dec3dcad70cdb71d
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.UI
     className: LevelUI
@@ -1276,13 +1281,7 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
-  - hash:
-      serializedVersion: 2
-      Hash: a6795116259533108f0508a48d358555
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: DancingLineFanmade.Trigger
-    className: CameraShakeTrigger
   platform: 19
   scenePathNames:
   - Assets/Scene.unity
-  playerPath: C:/Users/Administrator/Desktop/aa/DancingLineFanmade.exe
+  playerPath: C:/Users/Administrator/Desktop/t/DancingLineFanmade.exe
