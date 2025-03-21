@@ -11,6 +11,7 @@ namespace DancingLineFanmade.Level
         private Transform selfTransform;
 
         public static CameraFollower Instance { get; private set; }
+        public Camera thisCamera { get; set; }
 
         [SerializeField] private Transform target;
         [SerializeField] private Vector3 followSpeed = new Vector3(1.5f, 1.5f, 1.5f);
@@ -25,6 +26,7 @@ namespace DancingLineFanmade.Level
         private Tween rotation;
         private Tween zoom;
         private Tween shake;
+        private Tween fov;
 
         private float shakePower { get; set; }
 
@@ -36,8 +38,9 @@ namespace DancingLineFanmade.Level
 
         private void Start()
         {
-            rotator = selfTransform.GetChild(0);
-            scale = rotator.GetChild(0);
+            rotator = selfTransform.Find("Rotator");
+            scale = rotator.Find("Scale");
+            thisCamera = scale.Find("Camera").GetComponent<Camera>();
         }
 
         private void Update()
@@ -50,19 +53,22 @@ namespace DancingLineFanmade.Level
             }
         }
 
-        internal void Trigger(Vector3 offset, Vector3 rotation, Vector3 scale, float duration, Ease ease, RotateMode mode, UnityEvent action = null)
+        internal void Trigger(Vector3 offset, Vector3 rotation, Vector3 scale, float fov, float duration, Ease ease, RotateMode mode, UnityEvent callback)
         {
             SetOffset(offset, duration, ease);
             SetRotation(rotation, duration, mode, ease);
             SetScale(scale, duration, ease);
-            this.rotation.OnComplete(() => action.Invoke());
+            SetFov(fov, duration, ease);
+            this.rotation.OnComplete(() => callback.Invoke());
         }
 
-        internal void Kill()
+        internal void KillAll()
         {
             offset?.Kill();
             rotation?.Kill();
             zoom?.Kill();
+            shake?.Kill();
+            fov?.Kill();
         }
 
         private void SetOffset(Vector3 offset, float duration, Ease ease = Ease.InOutSine)
@@ -95,7 +101,7 @@ namespace DancingLineFanmade.Level
             zoom = this.scale.DOScale(scale, duration).SetEase(ease);
         }
 
-        public void Shake(float power = 1f, float duration = 3f)
+        public void DoShake(float power = 1f, float duration = 3f)
         {
             if (shake != null)
             {
@@ -117,6 +123,16 @@ namespace DancingLineFanmade.Level
         {
             scale.transform.localPosition = Vector3.zero;
         }
+
+        private void SetFov(float fov, float duration, Ease ease = Ease.InOutSine)
+        {
+            if (this.fov != null)
+            {
+                this.fov.Kill();
+                this.fov = null;
+            }
+            this.fov = thisCamera.DOFieldOfView(fov, duration).SetEase(ease);
+        }
     }
 
     [Serializable]
@@ -125,6 +141,7 @@ namespace DancingLineFanmade.Level
         public Vector3 offset;
         public Vector3 rotation;
         public Vector3 scale;
+        public float fov;
         public bool follow;
 
         internal CameraSettings GetCamera()
@@ -134,6 +151,7 @@ namespace DancingLineFanmade.Level
             settings.offset = follower.rotator.localPosition;
             settings.rotation = follower.rotator.localEulerAngles;
             settings.scale = follower.scale.localScale;
+            settings.fov = follower.thisCamera.fieldOfView;
             settings.follow = follower.follow;
             return settings;
         }
@@ -145,6 +163,7 @@ namespace DancingLineFanmade.Level
             follower.rotator.localEulerAngles = rotation;
             follower.scale.localScale = scale;
             follower.scale.localPosition = Vector3.zero;
+            follower.thisCamera.fieldOfView = fov;
             follower.follow = follow;
         }
     }

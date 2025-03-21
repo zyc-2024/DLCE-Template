@@ -11,7 +11,7 @@ namespace DancingLineFanmade.Trigger
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")) CameraFollower.Instance.Shake(power, duration);
+            if (other.CompareTag("Player")) CameraFollower.Instance.DoShake(power, duration);
         }
     }
 }

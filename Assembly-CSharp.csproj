@@ -80,12 +80,14 @@
     <Compile Include="Assets\#Template\[Scripts]\Level\Percentage.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Camera\CameraShakeTrigger.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Animator\AnimatorBase.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Trigger\FakePlayerTrigger.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\EventTrigger.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetActive.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\FallPredictor.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetAmbient.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Guidance\GuidanceBox.cs" />
     <Compile Include="Assets\#Template\[Scripts]\GUI\SetQuality.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Level\FakePlayer.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\LevelManager.cs" />
     <Compile Include="Assets\#Template\[Scripts]\GUI\LevelUI.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Camera\CameraTrigger.cs" />

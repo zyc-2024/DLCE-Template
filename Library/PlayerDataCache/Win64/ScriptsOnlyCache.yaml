@@ -111,7 +111,7 @@ ScriptsOnlyBuild:
     fullTypeName: DancingLineFanmade.UI.SetQuality
     methodName: SetLevel
   sceneClasses:
-    Assets/Scene.unity:
+    Assets/#Template/[Scenes]/Scene.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -187,21 +187,21 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4592}
     - Class: 114
-      Script: {instanceID: 5352}
+      Script: {instanceID: 5354}
     - Class: 114
-      Script: {instanceID: 5946}
+      Script: {instanceID: 5948}
     - Class: 114
-      Script: {instanceID: 5958}
+      Script: {instanceID: 5960}
     - Class: 114
-      Script: {instanceID: 5966}
+      Script: {instanceID: 5968}
     - Class: 114
-      Script: {instanceID: 6672}
+      Script: {instanceID: 6676}
     - Class: 114
-      Script: {instanceID: 7160}
+      Script: {instanceID: 7164}
     - Class: 114
-      Script: {instanceID: 7436}
+      Script: {instanceID: 7440}
     - Class: 114
-      Script: {instanceID: 8046}
+      Script: {instanceID: 8050}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -665,7 +665,7 @@ ScriptsOnlyBuild:
     className: Mask
   - hash:
       serializedVersion: 2
-      Hash: e9e83bcccd6b6929d73908fef595366d
+      Hash: 0908c9430ddf93b917b34e3bbd94af3c
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Trigger
     className: Checkpoint
@@ -863,6 +863,12 @@ ScriptsOnlyBuild:
     className: Toggle
   - hash:
       serializedVersion: 2
+      Hash: 595e9ce7ea93e68bf717f3fa5c26ffcb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Trigger
+    className: FakePlayerTrigger
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
@@ -953,7 +959,7 @@ ScriptsOnlyBuild:
     className: SetAmbient
   - hash:
       serializedVersion: 2
-      Hash: 237099d55889ceffa940f1af41d4968c
+      Hash: 2133c6fbfcb2f9324c3259e434897084
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Guidance
     className: GuidanceBox
@@ -987,6 +993,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextMeshProUGUI
+  - hash:
+      serializedVersion: 2
+      Hash: 8ffd6b76f77bde8b0a4be7b07cfbdbca
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Level
+    className: FakePlayer
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -1043,7 +1055,7 @@ ScriptsOnlyBuild:
     className: UnityOnDragMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 1e0b8e442451be1be3d5ef8b43e90b5e
+      Hash: b243d21b3ed6299c228b67f80eea5beb
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Trigger
     className: CameraTrigger
@@ -1283,5 +1295,5 @@ ScriptsOnlyBuild:
     className: UnityOnSliderValueChangedMessageListener
   platform: 19
   scenePathNames:
-  - Assets/Scene.unity
-  playerPath: C:/Users/Administrator/Desktop/t/DancingLineFanmade.exe
+  - Assets/#Template/[Scenes]/Scene.unity
+  playerPath: C:/Users/Administrator/Desktop/aaa/DancingLineFanmade.exe

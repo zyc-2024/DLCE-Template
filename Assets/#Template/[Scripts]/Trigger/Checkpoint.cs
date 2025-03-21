@@ -54,6 +54,7 @@ namespace DancingLineFanmade.Trigger
 
         private List<SetActive> actives = new List<SetActive>();
         private List<PlayAnimator> animators = new List<PlayAnimator>();
+        private List<FakePlayer> fakes = new List<FakePlayer>();
 
         private void Start()
         {
@@ -67,8 +68,9 @@ namespace DancingLineFanmade.Trigger
 
             rotator.localScale = Vector3.zero;
 
-            actives = FindObjectsOfType<SetActive>().ToList();
-            animators = FindObjectsOfType<PlayAnimator>().ToList();
+            actives = FindObjectsOfType<SetActive>(true).ToList();
+            animators = FindObjectsOfType<PlayAnimator>(true).ToList();
+            fakes = FindObjectsOfType<FakePlayer>(true).ToList();
         }
 
         private void Update()
@@ -98,7 +100,8 @@ namespace DancingLineFanmade.Trigger
             playerSecondDirection = player.secondDirection;
 
             foreach (SetActive s in actives) if (!s.activeOnAwake) s.AddRevives();
-            foreach (PlayAnimator a in animators) foreach (SingleAnimator s in a.animators) if (!s.dontRevive && s.played) s.GetProgress();
+            foreach (PlayAnimator a in animators) foreach (SingleAnimator s in a.animators) if (!s.dontRevive) s.GetState();
+            foreach (FakePlayer f in fakes) f.GetData();
             player.GetAnimatorProgresses();
         }
 
@@ -143,7 +146,8 @@ namespace DancingLineFanmade.Trigger
             player.secondDirection = playerSecondDirection;
             LevelManager.InitPlayerPosition(player, revivePosition.position, true, direction);
             foreach (SetActive s in actives) if (!s.activeOnAwake) s.Revive();
-            foreach (PlayAnimator a in animators) foreach (SingleAnimator s in a.animators) if (!s.dontRevive && s.played) s.SetProgress();
+            foreach (PlayAnimator a in animators) foreach (SingleAnimator s in a.animators) if (!s.dontRevive && s.played) s.SetState();
+            foreach (FakePlayer f in fakes) if (f.playing) f.ResetState();
             player.SetAnimatorProgresses();
 
             onRevive.Invoke();

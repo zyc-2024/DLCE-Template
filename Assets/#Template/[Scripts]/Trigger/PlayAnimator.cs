@@ -14,6 +14,8 @@ namespace DancingLineFanmade.Trigger
         private float progress;
         internal bool played;
 
+        private bool playState;
+
         public void IntiAnimator()
         {
             animator.speed = 0f;
@@ -31,14 +33,16 @@ namespace DancingLineFanmade.Trigger
             animator.speed = 0f;
         }
 
-        public void SetProgress()
+        public void SetState()
         {
             animator.Play(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name, 0, progress);
+            played = playState;
         }
 
-        public void GetProgress()
+        public void GetState()
         {
             progress = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            playState = played;
         }
     }
 

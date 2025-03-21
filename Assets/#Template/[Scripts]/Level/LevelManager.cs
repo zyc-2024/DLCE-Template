@@ -81,7 +81,7 @@ namespace DancingLineFanmade.Level
         public static void PlayerDeath(Player player, DieReason reason, GameObject cubes = null, Collision collision = null, bool revive = false)
         {
             trackFadeOut = AudioManager.FadeOut(0f, 10f);
-            CameraFollower.Instance.Kill();
+            CameraFollower.Instance.KillAll();
             player.allowTurn = false;
             foreach (Animator animator in player.stopOnDieAnimators) animator.speed = 0f;
             foreach (PlayAnimator a in Object.FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (!s.dontRevive) s.StopAnimator();
@@ -195,6 +195,15 @@ namespace DancingLineFanmade.Level
             var results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(data, results);
             return results.Count > 0;
+        }
+
+        public static GameObject CreateTrigger(Vector3 position, Vector3 rotation, Vector3 scale, bool local)
+        {
+            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            if (local) obj.transform.localPosition = position; else obj.transform.position = position;
+            if (local) obj.transform.localEulerAngles = rotation; else obj.transform.eulerAngles = rotation;
+            obj.transform.localScale = scale;
+            return obj;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace DancingLineFanmade.Level
         public Vector3 startPosition = Vector3.zero;
         public Vector3 firstDirection = new Vector3(0, 90, 0);
         public Vector3 secondDirection = Vector3.zero;
-        public int poolSize = 100;
+        [MinValue(1)] public int poolSize = 100;
         public Color debugTextColor = Color.black;
         public List<Animator> playOnStartAnimators = new List<Animator>();
         public List<Animator> stopOnDieAnimators = new List<Animator>();
@@ -167,6 +167,7 @@ namespace DancingLineFanmade.Level
                             if (!track) track = AudioManager.PlayClip(levelData.soundTrack, 1f); else track.Play();
                             if (playOnStartAnimators != null) foreach (Animator animator in playOnStartAnimators) animator.speed = 1f;
                             foreach (PlayAnimator a in FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (s.played) s.PlayAnimator();
+                            foreach (FakePlayer f in FindObjectsOfType<FakePlayer>(true)) if (f.playing) f.state = FakePlayerState.Moving;
                             CreateTail();
                             if (startPage)
                             {
@@ -308,5 +309,11 @@ namespace DancingLineFanmade.Level
             }
         }
 #endif
+
+        [Button("Get Start Position", ButtonSizes.Large)]
+        private void GetStartPosition()
+        {
+            startPosition = transform.position;
+        }
     }
 }

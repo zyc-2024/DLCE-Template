@@ -16,10 +16,10 @@ namespace DancingLineFanmade.Guidance
 
         private SpriteRenderer spriteRenderer;
         private GameObject triggerEffect;
+        private int index;
 
-        [SerializeField] internal bool triggered = false;
-        [SerializeField] private int index;
-        [SerializeField] internal bool added = false;
+        internal bool triggered = false;
+        internal bool displayed = false;
 
         public SpriteRenderer Renderer
         {
@@ -51,7 +51,7 @@ namespace DancingLineFanmade.Guidance
 
         private void Update()
         {
-            if (!triggered && Distance <= appearDistance) Appear(false);
+            if (!triggered && Distance <= appearDistance && !Renderer.enabled) Appear();
             if (LevelManager.Clicked && !triggered && Distance <= triggerDistance && canBeTriggered && LevelManager.GameState == GameStatus.Playing)
                 Trigger();
         }
@@ -63,14 +63,17 @@ namespace DancingLineFanmade.Guidance
             Destroy(Instantiate(triggerEffect, selfTransform.position, Quaternion.Euler(Vector3.zero)), 1f);
         }
 
-        internal void Appear(bool onlyBox)
+        internal void Appear()
         {
-            if (!added)
+            if (!displayed)
             {
-                added = true;
+                displayed = true;
                 index = Player.Instance.checkpoints.Count;
+
                 SpriteRenderer[] renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
-                if (!onlyBox) foreach (SpriteRenderer r in renderers) r.enabled = true; else Renderer.enabled = true;
+                foreach (SpriteRenderer r in renderers) r.enabled = true;
+                Renderer.enabled = true;
+
                 LevelManager.revivePlayer += ResetData;
             }
         }
@@ -78,15 +81,20 @@ namespace DancingLineFanmade.Guidance
         internal void Disappear(bool onlyBox)
         {
             SpriteRenderer[] renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
-            if (!onlyBox) foreach (SpriteRenderer r in renderers) r.enabled = false; else Renderer.enabled = false;
+            if (!onlyBox)
+            {
+                foreach (SpriteRenderer r in renderers) r.enabled = false;
+                Renderer.enabled = false;
+            }
+            else Renderer.enabled = false;
         }
 
         private void ResetData()
         {
             LevelManager.revivePlayer -= ResetData;
-            Disappear(false);
-            added = false;
+            displayed = false;
             triggered = false;
+            Disappear(false);
         }
 
         private void OnDestroy()
