@@ -17,9 +17,9 @@ ScriptsOnlyBuild:
     - DG.Tweening.Core.DOTweenSettings
     Sirenix.OdinInspector.Editor.dll:
     - Sirenix.OdinInspector.Editor.AttributesExampleWindow
+    - Sirenix.OdinInspector.Editor.GeneralDrawerConfig
     - Sirenix.OdinInspector.Editor.ImportSettingsConfig
     - Sirenix.OdinInspector.Editor.InspectorConfig
-    - Sirenix.OdinInspector.Editor.Modules.OdinModuleConfig
     - Sirenix.Serialization.AOTGenerationConfig
     Sirenix.Serialization.Config.dll:
     - Sirenix.Serialization.GlobalSerializationConfig
@@ -365,7 +365,7 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: 373209886bcf345acf147de5f6762998
+      Hash: 8092ce49da56f15e2d55648a75c8efb5
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Level
     className: Player
@@ -1293,7 +1293,13 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 3745bd02907b85f3219a04b6cf3ce2eb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Trigger
+    className: Speed
   platform: 19
   scenePathNames:
   - Assets/#Template/[Scenes]/Scene.unity
-  playerPath: C:/Users/Administrator/Desktop/aaa/DancingLineFanmade.exe
+  playerPath: C:/Users/Administrator/Desktop/AAA/DancingLineFanmade.exe

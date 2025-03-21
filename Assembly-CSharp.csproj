@@ -101,6 +101,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Level\AudioManager.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\PlayAnimator.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetImageColor.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Trigger\Speed.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\#Template\[Materials]\Shaders\PlaneFog.shader" />

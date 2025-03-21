@@ -40,7 +40,7 @@ namespace DancingLineFanmade.Trigger
                         LevelManager.revivePlayer += ResetDoor;
                         break;
                     case TriggerType.Final:
-                        CameraFollower.Instance.follow = false;
+                        if (CameraFollower.Instance) CameraFollower.Instance.follow = false;
                         LevelManager.GameState = GameStatus.Moving;
                         break;
                     case TriggerType.Waiting: Invoke("Complete", waitingTime); break;

@@ -1,3 +1,4 @@
+using DancingLineFanmade.Level;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,9 +36,11 @@ namespace DancingLineFanmade.UI
 
         public void Load(string sceneName)
         {
-            background.color = Color.white;
-            loadingText.color = Color.black;
-            loadingImage.color = Color.black;
+            Color backgroundColor = Player.Instance.sceneCamera.backgroundColor;
+
+            background.color = backgroundColor;
+            loadingText.color = LevelManager.GetColorByContent(backgroundColor);
+            loadingImage.color = LevelManager.GetColorByContent(backgroundColor);
 
             Fade(1f, 0.4f).OnComplete(() =>
             {

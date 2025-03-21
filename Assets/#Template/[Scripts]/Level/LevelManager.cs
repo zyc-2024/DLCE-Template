@@ -13,12 +13,6 @@ namespace DancingLineFanmade.Level
 {
     public delegate void OnPlayerRevive();
 
-    public interface IObjectColor
-    {
-        void GetColor();
-        void SetColor(Color color);
-    }
-
     public enum GameStatus
     {
         Waiting,
@@ -56,8 +50,15 @@ namespace DancingLineFanmade.Level
 
         public static Vector3 CameraPosition
         {
-            get => CameraFollower.Instance.transform.position;
-            set => CameraFollower.Instance.transform.position = value;
+            get
+            {
+                if (CameraFollower.Instance) return CameraFollower.Instance.transform.position;
+                else return Vector3.zero;
+            }
+            set 
+            {
+                if (CameraFollower.Instance) CameraFollower.Instance.transform.position = value;
+            }
         }
 
         private static GameObject dieCubes { get; set; }
@@ -81,7 +82,7 @@ namespace DancingLineFanmade.Level
         public static void PlayerDeath(Player player, DieReason reason, GameObject cubes = null, Collision collision = null, bool revive = false)
         {
             trackFadeOut = AudioManager.FadeOut(0f, 10f);
-            CameraFollower.Instance.KillAll();
+            if (CameraFollower.Instance) CameraFollower.Instance.KillAll();
             player.allowTurn = false;
             foreach (Animator animator in player.stopOnDieAnimators) animator.speed = 0f;
             foreach (PlayAnimator a in Object.FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (!s.dontRevive) s.StopAnimator();
@@ -203,7 +204,15 @@ namespace DancingLineFanmade.Level
             if (local) obj.transform.localPosition = position; else obj.transform.position = position;
             if (local) obj.transform.localEulerAngles = rotation; else obj.transform.eulerAngles = rotation;
             obj.transform.localScale = scale;
+            obj.GetComponent<BoxCollider>().isTrigger = true;
+            obj.GetComponent<MeshRenderer>().enabled = false;
             return obj;
+        }
+
+        public static Color GetColorByContent(Color color)
+        {
+            float brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
+            return brightness > 0.6f ? Color.black : Color.white;
         }
     }
 }

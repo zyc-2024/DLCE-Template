@@ -7,7 +7,7 @@ namespace DancingLineFanmade.Level
     [DisallowMultipleComponent, RequireComponent(typeof(SpriteRenderer))]
     public class Percentage : MonoBehaviour
     {
-        [SerializeField] private Percent percent = Percent.Ten;
+        [SerializeField, EnumToggleButtons] private Percent percent = Percent.Ten;
         [SerializeField] private Color color = Color.black;
         [SerializeField] private PercentageIcons icons = new PercentageIcons();
 

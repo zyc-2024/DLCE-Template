@@ -29,7 +29,7 @@ namespace DancingLineFanmade.UI
 
         private void SetText()
         {
-            LevelManager.SetFPSLimit(9999);
+            LevelManager.SetFPSLimit(int.MaxValue);
 #if UNITY_ANDROID
             QualitySettings.shadows = ShadowQuality.Disable;
 #endif

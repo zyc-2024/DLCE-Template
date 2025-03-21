@@ -68,6 +68,7 @@ namespace DancingLineFanmade.Level
         private BoxCollider characterCollider;
         private Vector3 tailPosition;
         private Transform tail;
+        private Transform tailHolder;
         private ObjectPool<Transform> tailPool = new ObjectPool<Transform>();
         private ResetFakePlayer reset = new ResetFakePlayer();
 
@@ -99,6 +100,7 @@ namespace DancingLineFanmade.Level
             selfTransform = transform;
             Rigidbody = GetComponent<Rigidbody>();
             playing = false;
+            tailHolder = new GameObject(gameObject.name + "-TailHolder").transform;
 
             characterCollider = GetComponent<BoxCollider>();
             groundedTestRays = new ValueTuple<Vector3, Ray>[]
@@ -205,6 +207,7 @@ namespace DancingLineFanmade.Level
             if (!tailPool.Full)
             {
                 tail = Instantiate(tailPrefab, selfTransform.position, selfTransform.rotation).transform;
+                tail.parent = tailHolder;
                 tailPool.Add(tail);
             }
             else
@@ -240,8 +243,6 @@ namespace DancingLineFanmade.Level
             id++;
             f.targetPlayer = this;
             f.type = SetType.Turn;
-            Destroy(g.GetComponent<MeshRenderer>());
-            g.GetComponent<BoxCollider>().isTrigger = true;
         }
 
         [Button("Get Start Position", ButtonSizes.Large)]

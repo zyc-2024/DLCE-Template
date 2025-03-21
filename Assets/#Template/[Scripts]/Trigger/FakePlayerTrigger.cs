@@ -43,14 +43,19 @@ namespace DancingLineFanmade.Trigger
                         break;
                 }
             }
-            if ((other.CompareTag("FakePlayer") || other.CompareTag("Obstacle")) && type == SetType.Turn)
+            if (other.CompareTag("FakePlayer") || other.CompareTag("Obstacle"))
             {
-                if (!used)
+                switch (type)
                 {
-                    index = Player.Instance.checkpoints.Count;
-                    LevelManager.revivePlayer += ResetData;
-                    targetPlayer?.Turn();
-                    used = true;
+                    case SetType.Turn:
+                        if (!used)
+                        {
+                            index = Player.Instance.checkpoints.Count;
+                            LevelManager.revivePlayer += ResetData;
+                            targetPlayer?.Turn();
+                            used = true;
+                        }
+                        break;
                 }
             }
         }

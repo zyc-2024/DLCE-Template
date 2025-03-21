@@ -14,8 +14,8 @@ namespace DancingLineFanmade.Level
         public Camera thisCamera { get; set; }
 
         [SerializeField] private Transform target;
-        [SerializeField] private Vector3 followSpeed = new Vector3(1.5f, 1.5f, 1.5f);
 
+        [SerializeField] internal Vector3 followSpeed = new Vector3(1.5f, 1.5f, 1.5f);
         [SerializeField] internal bool follow = true;
         [SerializeField] internal bool smooth = true;
 

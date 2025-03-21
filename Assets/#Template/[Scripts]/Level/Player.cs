@@ -36,7 +36,6 @@ namespace DancingLineFanmade.Level
         public Vector3 firstDirection = new Vector3(0, 90, 0);
         public Vector3 secondDirection = Vector3.zero;
         [MinValue(1)] public int poolSize = 100;
-        public Color debugTextColor = Color.black;
         public List<Animator> playOnStartAnimators = new List<Animator>();
         public List<Animator> stopOnDieAnimators = new List<Animator>();
         public bool allowTurn = true;
@@ -52,6 +51,7 @@ namespace DancingLineFanmade.Level
         private BoxCollider characterCollider;
         private Vector3 tailPosition;
         private Transform tail;
+        private Transform tailHolder;
         private ObjectPool<Transform> tailPool = new ObjectPool<Transform>();
         private List<float> startAnimatorProgresses = new List<float>();
         private StartPage startPage;
@@ -101,6 +101,7 @@ namespace DancingLineFanmade.Level
             checkpoints = new List<Checkpoint>();
             onTurn = new UnityEvent();
             selfTransform = transform;
+            tailHolder = new GameObject("PlayerTailHolder").transform;
 
             characterCollider = GetComponent<BoxCollider>();
             groundedTestRays = new ValueTuple<Vector3, Ray>[]
@@ -240,6 +241,7 @@ namespace DancingLineFanmade.Level
             if (!tailPool.Full)
             {
                 tail = Instantiate(tailPrefab, selfTransform.position, selfTransform.rotation).transform;
+                tail.parent = tailHolder;
                 tailPool.Add(tail);
             }
             else
@@ -290,7 +292,7 @@ namespace DancingLineFanmade.Level
         private void OnGUI()
         {
             GUIStyle style = new GUIStyle();
-            style.normal.textColor = debugTextColor;
+            style.normal.textColor = LevelManager.GetColorByContent(sceneCamera.backgroundColor);
             style.fontSize = 25;
 
             int finalFps = fps > 999f ? 999 : (int)fps;
@@ -302,10 +304,19 @@ namespace DancingLineFanmade.Level
                 GUI.Label(new Rect(10, 100, 120, 50), "线的坐标：" + selfTransform.localPosition, style);
                 GUI.Label(new Rect(10, 130, 120, 50), "线的朝向：" + selfTransform.localEulerAngles, style);
                 GUI.Label(new Rect(10, 160, 120, 50), "已获取方块数量：" + blockCount + "/10", style);
-                GUI.Label(new Rect(10, 190, 120, 50), "相机偏移：" + CameraFollower.Instance.rotator.localPosition, style);
-                GUI.Label(new Rect(10, 220, 120, 50), "相机角度：" + CameraFollower.Instance.rotator.localEulerAngles, style);
-                GUI.Label(new Rect(10, 250, 120, 50), "相机缩放：" + CameraFollower.Instance.scale.localScale, style);
-                GUI.Label(new Rect(10, 280, 120, 50), "视场大小：" + sceneCamera.fieldOfView, style);
+                if (CameraFollower.Instance)
+                {
+                    GUI.Label(new Rect(10, 190, 120, 50), "相机偏移：" + CameraFollower.Instance.rotator.localPosition, style);
+                    GUI.Label(new Rect(10, 220, 120, 50), "相机角度：" + CameraFollower.Instance.rotator.localEulerAngles, style);
+                    GUI.Label(new Rect(10, 250, 120, 50), "相机缩放：" + CameraFollower.Instance.scale.localScale, style);
+                    GUI.Label(new Rect(10, 280, 120, 50), "视场大小：" + sceneCamera.fieldOfView, style);
+                }
+                else
+                {
+                    GUI.Label(new Rect(10, 190, 120, 50), "相机位置：" + sceneCamera.transform.position, style);
+                    GUI.Label(new Rect(10, 220, 120, 50), "相机角度：" + sceneCamera.transform.eulerAngles, style);
+                    GUI.Label(new Rect(10, 250, 120, 50), "视场大小：" + sceneCamera.fieldOfView, style);
+                }
             }
         }
 #endif

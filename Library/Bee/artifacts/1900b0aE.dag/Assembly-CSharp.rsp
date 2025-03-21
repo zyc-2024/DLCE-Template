@@ -410,6 +410,7 @@
 "Assets/#Template/[Scripts]/Trigger/SetImageColor.cs"
 "Assets/#Template/[Scripts]/Trigger/SetLight.cs"
 "Assets/#Template/[Scripts]/Trigger/SetMaterialColor.cs"
+"Assets/#Template/[Scripts]/Trigger/Speed.cs"
 "Assets/#Template/[Scripts]/Trigger/Teleport.cs"
 -langversion:9.0
 

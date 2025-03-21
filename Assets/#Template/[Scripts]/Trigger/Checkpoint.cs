@@ -85,7 +85,7 @@ namespace DancingLineFanmade.Trigger
             index = player.checkpoints.Count - 1;
             rotator.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
 
-            if (!manualCamera) camera = camera.GetCamera();
+            if (!manualCamera && CameraFollower.Instance) camera = camera.GetCamera();
             if (!manualFog) fog = fog.GetFog();
             if (!manualLight) light = light.GetLight(player.sceneLight);
             if (!manualAmbient) ambient = ambient.GetAmbient();
@@ -125,7 +125,7 @@ namespace DancingLineFanmade.Trigger
 
         private void ResetScene()
         {
-            camera.SetCamera();
+            if (CameraFollower.Instance) camera.SetCamera();
             fog.SetFog(player.sceneCamera);
             light.SetLight(player.sceneLight);
             ambient.SetAmbient();
