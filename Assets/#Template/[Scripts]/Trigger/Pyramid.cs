@@ -1,0 +1,56 @@
+using DG.Tweening;
+using DancingLineFanmade.Level;
+using UnityEngine;
+
+namespace DancingLineFanmade.Trigger
+{
+    public enum TriggerType
+    {
+        Open,
+        Final,
+        Waiting,
+        Stop
+    }
+
+    [DisallowMultipleComponent]
+    public class Pyramid : MonoBehaviour
+    {
+        [SerializeField] private float waitingTime = 5f;
+
+        private Transform left;
+        private Transform right;
+        private float width = 1.8f;
+        private float duration = 2f;
+
+        private void Start()
+        {
+            left = transform.Find("Left");
+            right = transform.Find("Right");
+        }
+
+        internal void Trigger(TriggerType type)
+        {
+            if (LevelManager.GameState != GameStatus.Died)
+            {
+                switch (type)
+                {
+                    case TriggerType.Open:
+                        left.DOLocalMoveZ(width, duration).SetEase(Ease.Linear);
+                        right.DOLocalMoveZ(-width, duration).SetEase(Ease.Linear);
+                        break;
+                    case TriggerType.Final:
+                        CameraFollower.Instance.follow = false;
+                        LevelManager.GameState = GameStatus.Moving;
+                        break;
+                    case TriggerType.Waiting: Invoke("Complete", waitingTime); break;
+                    case TriggerType.Stop: LevelManager.GameState = GameStatus.Completed; break;
+                }
+            }
+        }
+
+        private void Complete()
+        {
+            LevelManager.GameOver(true);
+        }
+    }
+}
