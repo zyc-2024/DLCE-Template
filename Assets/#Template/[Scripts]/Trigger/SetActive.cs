@@ -44,7 +44,7 @@ namespace DancingLineFanmade.Trigger
         {
             if (other.CompareTag("Player") && !activeOnAwake)
             {
-                index = Player.Instance.checkpoints.Count;
+                index = Player.Instance.Checkpoints.Count;
                 foreach (SingleActive s in actives) s.SetActive();
             }
         }

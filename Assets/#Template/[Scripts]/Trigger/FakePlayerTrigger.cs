@@ -50,7 +50,7 @@ namespace DancingLineFanmade.Trigger
                     case SetType.Turn:
                         if (!used)
                         {
-                            index = Player.Instance.checkpoints.Count;
+                            index = Player.Instance.Checkpoints.Count;
                             LevelManager.revivePlayer += ResetData;
                             targetPlayer?.Turn();
                             used = true;

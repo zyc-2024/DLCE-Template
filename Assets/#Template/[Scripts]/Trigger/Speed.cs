@@ -16,7 +16,7 @@ namespace DancingLineFanmade.Trigger
         {
             if (other.CompareTag("Player") && !setFakePlayer)
             {
-                Player.Instance.speed = speed;
+                Player.Instance.Speed = speed;
                 if (setCameraFollowSpeed && CameraFollower.Instance) CameraFollower.Instance.followSpeed *= speed / 12f;
             }
             if ((other.CompareTag("FakePlayer") || other.CompareTag("Obstacle")) && setFakePlayer) player.speed = speed;

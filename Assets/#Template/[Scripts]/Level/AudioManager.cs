@@ -25,40 +25,40 @@ namespace DancingLineFanmade.Level
 
         public static float Time
         {
-            get => Player.Instance.soundTrack.time;
-            set => Player.Instance.soundTrack.time = value;
+            get => Player.Instance.SoundTrack.time;
+            set => Player.Instance.SoundTrack.time = value;
         }
 
         public static float Pitch
         {
-            get => Player.Instance.soundTrack.pitch;
-            set => Player.Instance.soundTrack.pitch = value;
+            get => Player.Instance.SoundTrack.pitch;
+            set => Player.Instance.SoundTrack.pitch = value;
         }
 
         public static float Volume
         {
-            get => Player.Instance.soundTrack.volume;
-            set => Player.Instance.soundTrack.volume = value;
+            get => Player.Instance.SoundTrack.volume;
+            set => Player.Instance.SoundTrack.volume = value;
         }
 
         public static float Progress
         {
-            get => Player.Instance.soundTrack.time / Player.Instance.soundTrack.clip.length;
+            get => Player.Instance.SoundTrack.time / Player.Instance.SoundTrack.clip.length;
         }
 
         public static void Stop()
         {
-            Player.Instance.soundTrack.Stop();
+            Player.Instance.SoundTrack.Stop();
         }
 
         public static void Play()
         {
-            Player.Instance.soundTrack.Play();
+            Player.Instance.SoundTrack.Play();
         }
 
         public static Tween FadeOut(float volume, float duration)
         {
-            return Player.Instance.soundTrack.DOFade(volume, duration).SetEase(Ease.Linear).OnComplete(new TweenCallback(Stop));
+            return Player.Instance.SoundTrack.DOFade(volume, duration).SetEase(Ease.Linear).OnComplete(new TweenCallback(Stop));
         }
     }
 }

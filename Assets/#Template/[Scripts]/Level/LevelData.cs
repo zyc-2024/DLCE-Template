@@ -20,7 +20,7 @@ namespace DancingLineFanmade.Level
 
         internal void SetLevelData()
         {
-            Player.Instance.speed = speed;
+            Player.Instance.Speed = speed;
             Time.timeScale = timeScale;
             Physics.gravity = gravity;
             foreach (SingleColor s in colors) s.SetColor();

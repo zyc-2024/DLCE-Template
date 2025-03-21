@@ -21,7 +21,7 @@ namespace DancingLineFanmade.Guidance
         [Title("Settings")]
         [SerializeField] internal Transform boxHolder;
         [SerializeField] private Color guidanceBoxColor = Color.white;
-        [SerializeField] private float lineGap = 0.2f;
+        [SerializeField, MinValue(0f)] private float lineGap = 0.2f;
 
         private GameObject boxPrefab;
         private GameObject linePrefab;
@@ -63,7 +63,7 @@ namespace DancingLineFanmade.Guidance
             forward = playerTransform.eulerAngles.y == player.firstDirection.y ? player.secondDirection.y : player.firstDirection.y;
             if (createBoxes && LevelManager.GameState == GameStatus.Playing && !started)
             {
-                player.onTurn.AddListener(() =>
+                player.OnTurn.AddListener(() =>
                 {
                     GameObject box = Instantiate(boxPrefab, player.transform.position - new Vector3(0f, 0.45f, 0f), Quaternion.Euler(90, forward, 0));
                     box.transform.parent = holder;

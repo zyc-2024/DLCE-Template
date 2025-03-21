@@ -30,14 +30,14 @@ namespace DancingLineFanmade.Trigger
         {
             if (other.CompareTag("Player") && !invokeOnAwake && !invoked)
             {
-                if (!invokeOnClick) Invoke(); else player.onTurn.AddListener(Invoke);
-                index = player.checkpoints.Count;
+                if (!invokeOnClick) Invoke(); else player.OnTurn.AddListener(Invoke);
+                index = player.Checkpoints.Count;
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player") && !invokeOnAwake && invokeOnClick) player.onTurn.RemoveListener(Invoke);
+            if (other.CompareTag("Player") && !invokeOnAwake && invokeOnClick) player.OnTurn.RemoveListener(Invoke);
         }
 
         private void Invoke()
@@ -56,7 +56,7 @@ namespace DancingLineFanmade.Trigger
             LevelManager.CompareCheckpointIndex(index, () =>
             {
                 invoked = false;
-                player.onTurn.RemoveListener(Invoke);
+                player.OnTurn.RemoveListener(Invoke);
             });
         }
 

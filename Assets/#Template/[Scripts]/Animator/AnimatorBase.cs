@@ -73,7 +73,7 @@ namespace DancingLineFanmade.Animated
 
         private Tween Animator(AnimatorType type, RotateMode rotateMode)
         {
-            index = Player.Instance.checkpoints.Count;
+            index = Player.Instance.Checkpoints.Count;
 
             switch (type)
             {

@@ -69,6 +69,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Animator\LocalPosAnimator.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetLight.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetMaterialColor.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Auto\AutoPlayController.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\LevelData.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\ObjectPool.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\ChangeDirection.cs" />
@@ -105,6 +106,8 @@
     <Compile Include="Assets\#Template\[Scripts]\Level\AudioManager.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\PlayAnimator.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetImageColor.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Auto\AutoPlay.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Auto\SetAutoPlay.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\#Template\[Materials]\Shaders\PlaneFog.shader" />

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace DancingLineFanmade.Level
@@ -36,25 +37,27 @@ namespace DancingLineFanmade.Level
         public Vector3 firstDirection = new Vector3(0, 90, 0);
         public Vector3 secondDirection = Vector3.zero;
         [MinValue(1)] public int poolSize = 100;
-        public List<Animator> playOnStartAnimators = new List<Animator>();
-        public List<Animator> stopOnDieAnimators = new List<Animator>();
+        public List<Animator> playedAnimators = new List<Animator>();
+        public List<PlayableDirector> playedTimelines = new List<PlayableDirector>();
         public bool allowTurn = true;
         public bool noDeath = false;
         public bool drawDirection = false;
 
-        internal int speed { get; set; }
-        internal AudioSource soundTrack { get; private set; }
-        internal int soundTrackProgress { get; set; }
-        internal int blockCount { get; set; }
-        internal UnityEvent onTurn { get; private set; }
-        internal List<Checkpoint> checkpoints { get; set; }
+        internal int Speed { get; set; }
+        internal AudioSource SoundTrack { get; private set; }
+        internal int SoundTrackProgress { get; set; }
+        internal int BlockCount { get; set; }
+        internal UnityEvent OnTurn { get; private set; }
+        internal List<Checkpoint> Checkpoints { get; set; }
+        internal bool disallowInput { get; set; }
 
         private BoxCollider characterCollider;
         private Vector3 tailPosition;
         private Transform tail;
         private Transform tailHolder;
         private ObjectPool<Transform> tailPool = new ObjectPool<Transform>();
-        private List<float> startAnimatorProgresses = new List<float>();
+        private List<float> animatorProgresses = new List<float>();
+        private List<double> timelineProgresses = new List<double>();
         private StartPage startPage;
         private bool debug = true;
         private bool loading = false;
@@ -105,10 +108,11 @@ namespace DancingLineFanmade.Level
             Instance = this;
             Rigidbody = GetComponent<Rigidbody>();
             loading = false;
-            checkpoints = new List<Checkpoint>();
-            onTurn = new UnityEvent();
+            Checkpoints = new List<Checkpoint>();
+            OnTurn = new UnityEvent();
             selfTransform = transform;
             tailHolder = new GameObject("PlayerTailHolder").transform;
+            disallowInput = false;
 
             characterCollider = GetComponent<BoxCollider>();
             groundedTestRays = new ValueTuple<Vector3, Ray>[]
@@ -120,7 +124,8 @@ namespace DancingLineFanmade.Level
             };
             previousFrameIsGrounded = Falling;
 
-            foreach (Animator animator in playOnStartAnimators) animator.speed = 0f;
+            foreach (Animator animator in playedAnimators) animator.speed = 0f;
+            foreach (PlayableDirector director in playedTimelines) director.Pause();
 
             LoadingPage.Instance?.Fade(0f, 0.4f);
 
@@ -150,6 +155,7 @@ namespace DancingLineFanmade.Level
             if (!LoadingPage.Instance) DontDestroyOnLoad(Instantiate(loadingPrefab));
 
             Events?.Invoke(0);
+            Cursor.visible = true;
         }
 
         private void Update()
@@ -175,9 +181,11 @@ namespace DancingLineFanmade.Level
                         if (LevelManager.Clicked && !Falling)
                         {
                             LevelManager.GameState = GameStatus.Playing;
-                            if (!soundTrack) soundTrack = AudioManager.PlayTrack(levelData.soundTrack, 1f); else AudioManager.Play();
-                            if (playOnStartAnimators != null) foreach (Animator animator in playOnStartAnimators) animator.speed = 1f;
-                            foreach (PlayAnimator a in FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (s.played) s.PlayAnimator();
+                            if (!SoundTrack) SoundTrack = AudioManager.PlayTrack(levelData.soundTrack, 1f);
+                            else AudioManager.Play();
+                            foreach (Animator a in playedAnimators) a.speed = 1f;
+                            foreach (PlayableDirector p in playedTimelines) p.Play();
+                            foreach (PlayAnimator p in FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in p.animators) if (s.played) s.PlayAnimator();
                             foreach (FakePlayer f in FindObjectsOfType<FakePlayer>(true)) if (f.playing) f.state = FakePlayerState.Moving;
                             CreateTail();
                             Events?.Invoke(1);
@@ -186,14 +194,17 @@ namespace DancingLineFanmade.Level
                                 startPage.Hide();
                                 startPage = null;
                             }
+                            Cursor.visible = false;
                         }
                         break;
-                    case GameStatus.Playing: if (LevelManager.Clicked && !Falling) Turn(); break;
+                    case GameStatus.Playing:
+                        if (LevelManager.Clicked && !Falling && !disallowInput) Turn();
+                        break;
                 }
             }
             if (LevelManager.GameState == GameStatus.Playing || LevelManager.GameState == GameStatus.Moving)
             {
-                selfTransform.Translate(Vector3.forward * speed * Time.deltaTime, Space.Self);
+                selfTransform.Translate(Vector3.forward * Speed * Time.deltaTime, Space.Self);
                 if (tail && !Falling)
                 {
                     tail.position = (tailPosition + selfTransform.position) * 0.5f;
@@ -217,14 +228,14 @@ namespace DancingLineFanmade.Level
                     }
                 }
             }
-            if (LevelManager.GameState == GameStatus.Playing) soundTrackProgress = soundTrack ? (int)(AudioManager.Progress * 100) : 0;
+            if (LevelManager.GameState == GameStatus.Playing) SoundTrackProgress = SoundTrack ? (int)(AudioManager.Progress * 100) : 0;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.collider.CompareTag("Obstacle") && !noDeath && LevelManager.GameState == GameStatus.Playing)
             {
-                if (checkpoints.Count <= 0) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, false);
+                if (Checkpoints.Count <= 0) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, false);
                 else LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, true);
             }
         }
@@ -233,7 +244,7 @@ namespace DancingLineFanmade.Level
         {
             selfTransform.eulerAngles = selfTransform.eulerAngles == firstDirection ? secondDirection : firstDirection;
             CreateTail();
-            onTurn.Invoke();
+            OnTurn.Invoke();
             Events?.Invoke(2);
         }
 
@@ -281,15 +292,27 @@ namespace DancingLineFanmade.Level
 
         internal void GetAnimatorProgresses()
         {
-            startAnimatorProgresses.Clear();
-            foreach (Animator a in playOnStartAnimators) startAnimatorProgresses.Add(a.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            animatorProgresses.Clear();
+            foreach (Animator a in playedAnimators) animatorProgresses.Add(a.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
 
         internal void SetAnimatorProgresses()
         {
-            for (int a = 0; a < playOnStartAnimators.Count; a++)
+            for (int a = 0; a < playedAnimators.Count; a++) playedAnimators[a].Play(playedAnimators[a].GetCurrentAnimatorClipInfo(0)[0].clip.name, 0, animatorProgresses[a]);
+        }
+
+        internal void GetTimelineProgresses()
+        {
+            timelineProgresses.Clear();
+            foreach (PlayableDirector p in playedTimelines) timelineProgresses.Add(p.time);
+        }
+
+        internal void SetTimelineProgresses()
+        {
+            for (int a = 0; a < playedTimelines.Count; a++)
             {
-                playOnStartAnimators[a].Play(playOnStartAnimators[a].GetCurrentAnimatorClipInfo(0)[0].clip.name, 0, startAnimatorProgresses[a]);
+                playedTimelines[a].time = timelineProgresses[a];
+                playedTimelines[a].Evaluate();
             }
         }
 
@@ -316,11 +339,11 @@ namespace DancingLineFanmade.Level
             if (debug)
             {
                 GUI.Label(new Rect(10, 10, 120, 50), "FPS：" + finalFps, style);
-                GUI.Label(new Rect(10, 40, 120, 50), "关卡进度：" + soundTrackProgress + "%", style);
+                GUI.Label(new Rect(10, 40, 120, 50), "关卡进度：" + SoundTrackProgress + "%", style);
                 GUI.Label(new Rect(10, 70, 120, 50), "游戏状态：" + LevelManager.GameState, style);
                 GUI.Label(new Rect(10, 100, 120, 50), "线的坐标：" + selfTransform.localPosition, style);
                 GUI.Label(new Rect(10, 130, 120, 50), "线的朝向：" + selfTransform.localEulerAngles, style);
-                GUI.Label(new Rect(10, 160, 120, 50), "已获取方块数量：" + blockCount + "/10", style);
+                GUI.Label(new Rect(10, 160, 120, 50), "已获取方块数量：" + BlockCount + "/10", style);
                 if (CameraFollower.Instance)
                 {
                     GUI.Label(new Rect(10, 190, 120, 50), "相机偏移：" + CameraFollower.Instance.rotator.localPosition, style);

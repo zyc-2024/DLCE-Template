@@ -8,6 +8,7 @@ using DancingLineFanmade.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.Playables;
 
 namespace DancingLineFanmade.Level
 {
@@ -37,9 +38,14 @@ namespace DancingLineFanmade.Level
             set => gameState = value;
         }
 
+        public static bool getInput = true;
         public static bool Clicked
         {
-            get => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+            get
+            {
+                if (getInput) return Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+                else return false;
+            }
         }
 
         /// <summary>
@@ -92,8 +98,9 @@ namespace DancingLineFanmade.Level
             trackFadeOut = AudioManager.FadeOut(0f, 10f);
             if (CameraFollower.Instance) CameraFollower.Instance.KillAll();
             player.allowTurn = false;
-            foreach (Animator animator in player.stopOnDieAnimators) animator.speed = 0f;
-            foreach (PlayAnimator a in Object.FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (!s.dontRevive) s.StopAnimator();
+            foreach (Animator a in player.playedAnimators) a.speed = 0f;
+            foreach (PlayableDirector p in player.playedTimelines) p.Pause();
+            foreach (PlayAnimator p in Object.FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in p.animators) if (!s.dontRevive) s.StopAnimator();
             player.Events?.Invoke(5);
             switch (reason)
             {
@@ -112,6 +119,7 @@ namespace DancingLineFanmade.Level
                     break;
             }
             if (!revive) GameOverNormal(false); else GameOverRevive();
+            Cursor.visible = true;
         }
 
         public static void GameOverNormal(bool complete)
@@ -119,7 +127,7 @@ namespace DancingLineFanmade.Level
             float percentage = complete ? 1f : AudioManager.Progress;
 
             if (GameState == GameStatus.Died || GameState == GameStatus.Completed || GameState == GameStatus.Moving)
-                LevelUI.Instance.NormalPage(percentage, Player.Instance.blockCount);
+                LevelUI.Instance.NormalPage(percentage, Player.Instance.BlockCount);
         }
 
         public static void GameOverRevive()
@@ -157,12 +165,12 @@ namespace DancingLineFanmade.Level
 
         public static void CompareCheckpointIndex(int index, UnityAction callback)
         {
-            if (index > Player.Instance.checkpoints.Count - 1) callback.Invoke();
+            if (index > Player.Instance.Checkpoints.Count - 1) callback.Invoke();
         }
 
         public static bool CompareCheckpointIndex(int index)
         {
-            if (index > Player.Instance.checkpoints.Count - 1) return true; else return false;
+            if (index > Player.Instance.Checkpoints.Count - 1) return true; else return false;
         }
 
         public static void SetFPSLimit(int frame)
@@ -229,19 +237,19 @@ namespace DancingLineFanmade.Level
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(center.position, center.position + Vector3.right * length);
-            Gizmos.DrawIcon(center.position + Vector3.right * length, "90");
+            Gizmos.DrawIcon(center.position + Vector3.right * length, "Directions/90");
 
             Gizmos.color = Color.green;
             Gizmos.DrawLine(center.position, center.position + Vector3.left * length);
-            Gizmos.DrawIcon(center.position + Vector3.left * length, "270");
+            Gizmos.DrawIcon(center.position + Vector3.left * length, "Directions/270");
 
             Gizmos.color = Color.red;
             Gizmos.DrawLine(center.position, center.position + Vector3.forward * length);
-            Gizmos.DrawIcon(center.position + Vector3.forward * length, "0");
+            Gizmos.DrawIcon(center.position + Vector3.forward * length, "Directions/0");
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(center.position, center.position + Vector3.back * length);
-            Gizmos.DrawIcon(center.position + Vector3.back * length, "180");
+            Gizmos.DrawIcon(center.position + Vector3.back * length, "Directions/180");
         }
     }
 }

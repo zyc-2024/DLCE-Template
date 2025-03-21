@@ -10,7 +10,7 @@ namespace DancingLineFanmade.Guidance
         private Transform selfTransform;
 
         [SerializeField] private float triggerDistance = 1f;
-        [SerializeField] private float appearDistance = 576f;
+        [SerializeField] private float appearDistance = 600f;
         [SerializeField] internal bool canBeTriggered = true;
         [SerializeField] internal bool haveLine = true;
 
@@ -52,7 +52,7 @@ namespace DancingLineFanmade.Guidance
         private void Update()
         {
             if (!triggered && Distance <= appearDistance && !Renderer.enabled) Appear();
-            if (LevelManager.Clicked && !triggered && Distance <= triggerDistance && canBeTriggered && LevelManager.GameState == GameStatus.Playing)
+            if (LevelManager.Clicked && !triggered && Distance <= triggerDistance && canBeTriggered && LevelManager.GameState == GameStatus.Playing && !Player.Instance.disallowInput)
                 Trigger();
         }
 
@@ -68,7 +68,7 @@ namespace DancingLineFanmade.Guidance
             if (!displayed)
             {
                 displayed = true;
-                index = Player.Instance.checkpoints.Count;
+                index = Player.Instance.Checkpoints.Count;
 
                 SpriteRenderer[] renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
                 foreach (SpriteRenderer r in renderers) r.enabled = true;

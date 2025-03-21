@@ -100,13 +100,13 @@ namespace DancingLineFanmade.UI
         public void RevivePlayer()
         {
             foreach (Button b in buttonsRevive) b.interactable = false;
-            player.RevivePlayer(player.checkpoints[player.checkpoints.Count - 1]);
+            player.RevivePlayer(player.Checkpoints[player.Checkpoints.Count - 1]);
         }
 
         public void CancelRevive()
         {
             foreach (Button b in buttonsRevive) b.interactable = false;
-            NormalPage(progress, player.blockCount);
+            NormalPage(progress, player.BlockCount);
 
             moveUpRevive.DOAnchorPos(new Vector2(0f, -250f), 0.4f).SetEase(Ease.OutSine);
             moveDownRevive.DOAnchorPos(new Vector2(0f, 260f), 0.4f).SetEase(Ease.OutSine);

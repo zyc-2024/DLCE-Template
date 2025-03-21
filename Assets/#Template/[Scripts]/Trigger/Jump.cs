@@ -8,11 +8,13 @@ namespace DancingLineFanmade.Trigger
     public class Jump : MonoBehaviour
     {
         [SerializeField, MinValue(0f)] internal float power = 500f;
+        [SerializeField] private bool changeDirection = false;
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
             {
+                if (changeDirection) Player.Instance.Turn();
                 Player.Rigidbody.AddForce(0, power * Player.Rigidbody.mass, 0, ForceMode.Force);
                 Player.Instance.Events?.Invoke(7);
             }
