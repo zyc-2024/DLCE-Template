@@ -9,7 +9,7 @@ namespace DancingLineFanmade.Level
     {
         [SerializeField, EnumToggleButtons] private Percent percent = Percent.Ten;
         [SerializeField] private Color color = Color.black;
-        [SerializeField] private PercentageIcons icons = new PercentageIcons();
+        [SerializeField] private PercentageIcons icons;
 
         private SpriteRenderer spriteRenderer;
         [SerializeField, HideInInspector] private Material material;
@@ -26,7 +26,9 @@ namespace DancingLineFanmade.Level
 
         private void SetPercentage()
         {
-            spriteRenderer = GetComponent<SpriteRenderer>() ? GetComponent<SpriteRenderer>() : gameObject.AddComponent<SpriteRenderer>();
+            spriteRenderer = GetComponent<SpriteRenderer>()
+                ? GetComponent<SpriteRenderer>()
+                : gameObject.AddComponent<SpriteRenderer>();
             spriteRenderer.material = material;
             spriteRenderer.color = color;
             switch (percent)

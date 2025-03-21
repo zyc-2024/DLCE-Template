@@ -8,13 +8,10 @@ namespace DancingLineFanmade.Auto
     {
         private Transform playerTransform;
         private Transform selfTransform;
-        private float triggerDistance = 0.33f;
-        private bool triggered = false;
+        private const float triggerDistance = 0.33f;
+        private bool triggered;
 
-        private float Distance
-        {
-            get => (selfTransform.position - playerTransform.position).sqrMagnitude;
-        }
+        private float Distance => (selfTransform.position - playerTransform.position).sqrMagnitude;
 
         private void Start()
         {
@@ -24,11 +21,9 @@ namespace DancingLineFanmade.Auto
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.CompareTag("Player") && Distance <= triggerDistance && !triggered)
-            {
-                triggered = true;
-                Player.Instance.Turn();
-            }
+            if (!other.CompareTag("Player") || !(Distance <= triggerDistance) || triggered) return;
+            triggered = true;
+            Player.Instance.Turn();
         }
     }
 }

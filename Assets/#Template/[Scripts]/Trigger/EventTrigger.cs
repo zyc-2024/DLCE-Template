@@ -8,31 +8,27 @@ namespace DancingLineFanmade.Trigger
     [DisallowMultipleComponent]
     public class EventTrigger : MonoBehaviour
     {
-        [SerializeField] private bool invokeOnAwake = false;
-        [SerializeField, HideIf("invokeOnAwake")] private bool invokeOnClick = false;
+        [SerializeField] private bool invokeOnAwake;
+        [SerializeField, HideIf("invokeOnAwake")] private bool invokeOnClick;
         [SerializeField] private UnityEvent onTriggerEnter = new UnityEvent();
 
         private Player player;
-        private bool invoked = false;
+        private bool invoked;
         private int index;
 
         private void Start()
         {
             player = Player.Instance;
-            if (invokeOnAwake)
-            {
-                Invoke();
-                invoked = true;
-            }
+            if (!invokeOnAwake) return;
+            Invoke();
+            invoked = true;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player") && !invokeOnAwake && !invoked)
-            {
-                if (!invokeOnClick) Invoke(); else player.OnTurn.AddListener(Invoke);
-                index = player.Checkpoints.Count;
-            }
+            if (!other.CompareTag("Player") || invokeOnAwake || invoked) return;
+            if (!invokeOnClick) Invoke(); else player.OnTurn.AddListener(Invoke);
+            index = player.Checkpoints.Count;
         }
 
         private void OnTriggerExit(Collider other)
@@ -42,12 +38,10 @@ namespace DancingLineFanmade.Trigger
 
         private void Invoke()
         {
-            if (!invoked)
-            {
-                onTriggerEnter.Invoke();
-                invoked = true;
-                LevelManager.revivePlayer += ResetData;
-            }
+            if (invoked) return;
+            onTriggerEnter.Invoke();
+            invoked = true;
+            LevelManager.revivePlayer += ResetData;
         }
 
         private void ResetData()

@@ -10,11 +10,12 @@ namespace DancingLineFanmade.Animated
 
         private void Start()
         {
-            switch (transformType)
+            finalTransform = transformType switch
             {
-                case TransformType.New: finalTransform = scale; break;
-                case TransformType.Add: finalTransform = originalTransform + scale; break;
-            }
+                TransformType.New => scale,
+                TransformType.Add => originalTransform + scale,
+                _ => finalTransform
+            };
             InitTransform(AnimatorType.Scale);
             if (triggeredByTime) InitTime();
         }
@@ -61,29 +62,23 @@ namespace DancingLineFanmade.Animated
         [Button("Get new scale", ButtonSizes.Large), HorizontalGroup("1")]
         private void GetNewScale()
         {
-            switch (transformType)
+            scale = transformType switch
             {
-                case TransformType.New:
-                    scale = transform.localScale;
-                    break;
-                case TransformType.Add:
-                    scale = transform.localScale - originalTransform;
-                    break;
-            }
+                TransformType.New => transform.localScale,
+                TransformType.Add => transform.localScale - originalTransform,
+                _ => scale
+            };
         }
 
         [Button("Set as new scale", ButtonSizes.Large), HorizontalGroup("1")]
         private void SetNewScale()
         {
-            switch (transformType)
+            transform.localScale = transformType switch
             {
-                case TransformType.New:
-                    transform.localScale = scale;
-                    break;
-                case TransformType.Add:
-                    transform.localScale = originalTransform + scale;
-                    break;
-            }
+                TransformType.New => scale,
+                TransformType.Add => originalTransform + scale,
+                _ => transform.localScale
+            };
         }
 #endif
     }

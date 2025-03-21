@@ -45,21 +45,23 @@ namespace DancingLineFanmade.Level
 
         private void Update()
         {
-            Vector3 translation = target.position - selfTransform.position;
-            if (LevelManager.GameState == GameStatus.Playing && follow)
-            {
-                if (smooth) selfTransform.Translate(new Vector3(translation.x * followSpeed.x * Time.deltaTime, translation.y * followSpeed.y * Time.deltaTime, translation.z * followSpeed.z * Time.deltaTime));
-                else selfTransform.position = target.position;
-            }
+            var translation = target.position - selfTransform.position;
+            if (LevelManager.GameState != GameStatus.Playing || !follow) return;
+            if (smooth)
+                selfTransform.Translate(new Vector3(translation.x * followSpeed.x * Time.deltaTime,
+                    translation.y * followSpeed.y * Time.deltaTime, translation.z * followSpeed.z * Time.deltaTime));
+            else selfTransform.position = target.position;
         }
 
-        internal void Trigger(Vector3 offset, Vector3 rotation, Vector3 scale, float fov, float duration, Ease ease, RotateMode mode, UnityEvent callback)
+        internal void Trigger(Vector3 n_offset, Vector3 n_rotation, Vector3 n_scale, float n_fov, float duration,
+            Ease ease,
+            RotateMode mode, UnityEvent callback)
         {
-            SetOffset(offset, duration, ease);
-            SetRotation(rotation, duration, mode, ease);
-            SetScale(scale, duration, ease);
-            SetFov(fov, duration, ease);
-            this.rotation.OnComplete(() => callback.Invoke());
+            SetOffset(n_offset, duration, ease);
+            SetRotation(n_rotation, duration, mode, ease);
+            SetScale(n_scale, duration, ease);
+            SetFov(n_fov, duration, ease);
+            rotation.OnComplete(callback.Invoke);
         }
 
         internal void KillAll()
@@ -71,34 +73,37 @@ namespace DancingLineFanmade.Level
             fov?.Kill();
         }
 
-        private void SetOffset(Vector3 offset, float duration, Ease ease = Ease.InOutSine)
+        private void SetOffset(Vector3 n_offset, float duration, Ease ease = Ease.InOutSine)
         {
-            if (this.offset != null)
+            if (offset != null)
             {
-                this.offset.Kill();
-                this.offset = null;
+                offset.Kill();
+                offset = null;
             }
-            this.offset = rotator.DOLocalMove(offset, duration).SetEase(ease);
+
+            offset = rotator.DOLocalMove(n_offset, duration).SetEase(ease);
         }
 
-        private void SetRotation(Vector3 rotation, float duration, RotateMode mode, Ease ease = Ease.InOutSine)
+        private void SetRotation(Vector3 n_rotation, float duration, RotateMode mode, Ease ease = Ease.InOutSine)
         {
-            if (this.rotation != null)
+            if (rotation != null)
             {
-                this.rotation.Kill();
-                this.rotation = null;
+                rotation.Kill();
+                rotation = null;
             }
-            this.rotation = rotator.DOLocalRotate(rotation, duration, mode).SetEase(ease);
+
+            rotation = rotator.DOLocalRotate(n_rotation, duration, mode).SetEase(ease);
         }
 
-        private void SetScale(Vector3 scale, float duration, Ease ease = Ease.InOutSine)
+        private void SetScale(Vector3 n_scale, float duration, Ease ease = Ease.InOutSine)
         {
             if (zoom != null)
             {
                 zoom.Kill();
                 zoom = null;
             }
-            zoom = this.scale.DOScale(scale, duration).SetEase(ease);
+
+            zoom = scale.DOScale(n_scale, duration).SetEase(ease);
         }
 
         public void DoShake(float power = 1f, float duration = 3f)
@@ -108,15 +113,17 @@ namespace DancingLineFanmade.Level
                 shake.Kill();
                 shake = null;
             }
+
             shake = DOTween.To(() => shakePower, x => shakePower = x, power, duration * 0.5f).SetEase(Ease.Linear);
             shake.SetLoops(2, LoopType.Yoyo);
-            shake.OnUpdate(new TweenCallback(ShakeUpdate));
-            shake.OnComplete(new TweenCallback(ShakeFinished));
+            shake.OnUpdate(ShakeUpdate);
+            shake.OnComplete(ShakeFinished);
         }
 
         private void ShakeUpdate()
         {
-            scale.transform.localPosition = new Vector3(UnityEngine.Random.value * shakePower, UnityEngine.Random.value * shakePower, UnityEngine.Random.value * shakePower);
+            scale.transform.localPosition = new Vector3(UnityEngine.Random.value * shakePower,
+                UnityEngine.Random.value * shakePower, UnityEngine.Random.value * shakePower);
         }
 
         private void ShakeFinished()
@@ -124,14 +131,15 @@ namespace DancingLineFanmade.Level
             scale.transform.localPosition = Vector3.zero;
         }
 
-        private void SetFov(float fov, float duration, Ease ease = Ease.InOutSine)
+        private void SetFov(float n_fov, float duration, Ease ease = Ease.InOutSine)
         {
-            if (this.fov != null)
+            if (fov != null)
             {
-                this.fov.Kill();
-                this.fov = null;
+                fov.Kill();
+                fov = null;
             }
-            this.fov = thisCamera.DOFieldOfView(fov, duration).SetEase(ease);
+
+            fov = thisCamera.DOFieldOfView(n_fov, duration).SetEase(ease);
         }
     }
 
@@ -146,8 +154,8 @@ namespace DancingLineFanmade.Level
 
         internal CameraSettings GetCamera()
         {
-            CameraSettings settings = new CameraSettings();
-            CameraFollower follower = CameraFollower.Instance;
+            var settings = new CameraSettings();
+            var follower = CameraFollower.Instance;
             settings.offset = follower.rotator.localPosition;
             settings.rotation = follower.rotator.localEulerAngles;
             settings.scale = follower.scale.localScale;
@@ -158,7 +166,7 @@ namespace DancingLineFanmade.Level
 
         internal void SetCamera()
         {
-            CameraFollower follower = CameraFollower.Instance;
+            var follower = CameraFollower.Instance;
             follower.rotator.localPosition = offset;
             follower.rotator.localEulerAngles = rotation;
             follower.scale.localScale = scale;

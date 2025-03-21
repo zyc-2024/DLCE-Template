@@ -12,11 +12,12 @@ namespace DancingLineFanmade.Animated
 
         private void Start()
         {
-            switch (transformType)
+            finalTransform = transformType switch
             {
-                case TransformType.New: finalTransform = rotation; break;
-                case TransformType.Add: finalTransform = originalTransform + rotation; break;
-            }
+                TransformType.New => rotation,
+                TransformType.Add => originalTransform + rotation,
+                _ => finalTransform
+            };
             InitTransform(AnimatorType.Rotation);
             if (triggeredByTime) InitTime();
         }

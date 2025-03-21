@@ -19,8 +19,8 @@ namespace DancingLineFanmade.Trigger
 
         private Transform left;
         private Transform right;
-        private float width = 1.8f;
-        private float duration = 2f;
+        private const float width = 1.8f;
+        private const float duration = 2f;
 
         private void Start()
         {
@@ -30,22 +30,20 @@ namespace DancingLineFanmade.Trigger
 
         internal void Trigger(TriggerType type)
         {
-            if (LevelManager.GameState != GameStatus.Died)
+            if (LevelManager.GameState == GameStatus.Died) return;
+            switch (type)
             {
-                switch (type)
-                {
-                    case TriggerType.Open:
-                        left.DOLocalMoveZ(width, duration).SetEase(Ease.Linear);
-                        right.DOLocalMoveZ(-width, duration).SetEase(Ease.Linear);
-                        LevelManager.revivePlayer += ResetDoor;
-                        break;
-                    case TriggerType.Final:
-                        if (CameraFollower.Instance) CameraFollower.Instance.follow = false;
-                        LevelManager.GameState = GameStatus.Moving;
-                        break;
-                    case TriggerType.Waiting: Invoke("Complete", waitingTime); break;
-                    case TriggerType.Stop: LevelManager.GameState = GameStatus.Completed; break;
-                }
+                case TriggerType.Open:
+                    left.DOLocalMoveZ(width, duration).SetEase(Ease.Linear);
+                    right.DOLocalMoveZ(-width, duration).SetEase(Ease.Linear);
+                    LevelManager.revivePlayer += ResetDoor;
+                    break;
+                case TriggerType.Final:
+                    if (CameraFollower.Instance) CameraFollower.Instance.follow = false;
+                    LevelManager.GameState = GameStatus.Moving;
+                    break;
+                case TriggerType.Waiting: Invoke(nameof(Complete), waitingTime); break;
+                case TriggerType.Stop: LevelManager.GameState = GameStatus.Completed; break;
             }
         }
 

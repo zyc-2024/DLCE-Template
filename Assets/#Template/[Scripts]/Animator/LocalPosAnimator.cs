@@ -10,11 +10,12 @@ namespace DancingLineFanmade.Animated
 
         private void Start()
         {
-            switch (transformType)
+            finalTransform = transformType switch
             {
-                case TransformType.New: finalTransform = position; break;
-                case TransformType.Add: finalTransform = originalTransform + position; break;
-            }
+                TransformType.New => position,
+                TransformType.Add => originalTransform + position,
+                _ => finalTransform
+            };
             InitTransform(AnimatorType.Position);
             if (triggeredByTime) InitTime();
         }
@@ -61,29 +62,23 @@ namespace DancingLineFanmade.Animated
         [Button("Get new position", ButtonSizes.Large), HorizontalGroup("1")]
         private void GetNewPos()
         {
-            switch (transformType)
+            position = transformType switch
             {
-                case TransformType.New:
-                    position = transform.localPosition;
-                    break;
-                case TransformType.Add:
-                    position = transform.localPosition - originalTransform;
-                    break;
-            }
+                TransformType.New => transform.localPosition,
+                TransformType.Add => transform.localPosition - originalTransform,
+                _ => position
+            };
         }
 
         [Button("Set as new position", ButtonSizes.Large), HorizontalGroup("1")]
         private void SetNewPos()
         {
-            switch (transformType)
+            transform.localPosition = transformType switch
             {
-                case TransformType.New:
-                    transform.localPosition = position;
-                    break;
-                case TransformType.Add:
-                    transform.localPosition = originalTransform + position;
-                    break;
-            }
+                TransformType.New => position,
+                TransformType.Add => originalTransform + position,
+                _ => transform.localPosition
+            };
         }
 #endif
     }

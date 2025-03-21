@@ -7,11 +7,9 @@ namespace DancingLineFanmade.Trigger
     {
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
-            {
-                transform.GetComponentInParent<Checkpoint>().EnterTrigger();
-                gameObject.SetActive(false);
-            }
+            if (!other.CompareTag("Player")) return;
+            transform.GetComponentInParent<Checkpoint>().EnterTrigger();
+            gameObject.SetActive(false);
         }
     }
 }

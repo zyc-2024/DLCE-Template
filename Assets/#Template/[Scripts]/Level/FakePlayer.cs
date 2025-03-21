@@ -41,7 +41,6 @@ namespace DancingLineFanmade.Level
     [DisallowMultipleComponent, RequireComponent(typeof(BoxCollider), typeof(Rigidbody))]
     public class FakePlayer : MonoBehaviour
     {
-        public Rigidbody Rigidbody { get; private set; }
         public FakePlayerState state { get; set; }
         public bool playing { get; set; }
 
@@ -51,16 +50,25 @@ namespace DancingLineFanmade.Level
         public Vector3 firstDirection = new Vector3(0, 90, 0);
         public Vector3 secondDirection = Vector3.zero;
         [MinValue(1)] public int poolSize = 100;
-        public bool isWall = false;
-        public bool drawDirection = false;
+        public bool isWall;
+        public bool drawDirection;
 
         [SerializeField] private bool createTurnTrigger = true;
-        [SerializeField, ShowIf("@createTurnTrigger")] private bool synchronismWithPlayer = false;
-        [SerializeField, ShowIf("@createTurnTrigger && !synchronismWithPlayer")] private KeyCode createKey = KeyCode.P;
-        [SerializeField, ShowIf("@createTurnTrigger && !synchronismWithPlayer")] private Vector3 triggerRotation = Vector3.zero;
-        [SerializeField, ShowIf("@createTurnTrigger && !synchronismWithPlayer")] private Vector3 triggerScale = Vector3.one;
+
+        [SerializeField, ShowIf("@createTurnTrigger")]
+        private bool synchronismWithPlayer;
+
+        [SerializeField, ShowIf("@createTurnTrigger && !synchronismWithPlayer")]
+        private KeyCode createKey = KeyCode.P;
+
+        [SerializeField, ShowIf("@createTurnTrigger && !synchronismWithPlayer")]
+        private Vector3 triggerRotation = Vector3.zero;
+
+        [SerializeField, ShowIf("@createTurnTrigger && !synchronismWithPlayer")]
+        private Vector3 triggerScale = Vector3.one;
+
         private Transform triggerHolder;
-        private int id = 0;
+        private int id;
 
         private Transform selfTransform;
         private GameObject tailPrefab;
@@ -70,28 +78,30 @@ namespace DancingLineFanmade.Level
         private Vector3 tailPosition;
         private Transform tail;
         private Transform tailHolder;
-        private ObjectPool<Transform> tailPool = new ObjectPool<Transform>();
-        private ResetFakePlayer reset = new ResetFakePlayer();
+        private readonly ObjectPool<Transform> tailPool = new ObjectPool<Transform>();
+        private readonly ResetFakePlayer reset = new ResetFakePlayer();
 
-        private float TailDistance
-        {
-            get => new Vector2(tailPosition.x - selfTransform.position.x, tailPosition.z - selfTransform.position.z).magnitude;
-        }
+        private float TailDistance =>
+            new Vector2(tailPosition.x - selfTransform.position.x, tailPosition.z - selfTransform.position.z).magnitude;
 
         private bool previousFrameIsGrounded;
-        private float groundedRayDistance = 0.05f;
+        private const float groundedRayDistance = 0.05f;
         private ValueTuple<Vector3, Ray>[] groundedTestRays;
-        private RaycastHit[] groundedTestResults = new RaycastHit[1];
+        private readonly RaycastHit[] groundedTestResults = new RaycastHit[1];
+
         public bool Falling
         {
             get
             {
-                for (int i = 0; i < groundedTestRays.Length; i++)
+                for (var i = 0; i < groundedTestRays.Length; i++)
                 {
-                    groundedTestRays[i].Item2.origin = selfTransform.position + selfTransform.localRotation * groundedTestRays[i].Item1;
-                    if (Physics.RaycastNonAlloc(groundedTestRays[i].Item2, groundedTestResults, groundedRayDistance + 0.1f, -257, QueryTriggerInteraction.Ignore) > 0)
+                    groundedTestRays[i].Item2.origin = selfTransform.position +
+                                                       selfTransform.localRotation * groundedTestRays[i].Item1;
+                    if (Physics.RaycastNonAlloc(groundedTestRays[i].Item2, groundedTestResults,
+                            groundedRayDistance + 0.1f, -257, QueryTriggerInteraction.Ignore) > 0)
                         return false;
                 }
+
                 return true;
             }
         }
@@ -99,17 +109,29 @@ namespace DancingLineFanmade.Level
         private void Awake()
         {
             selfTransform = transform;
-            Rigidbody = GetComponent<Rigidbody>();
+            GetComponent<Rigidbody>();
             playing = false;
             tailHolder = new GameObject(gameObject.name + "-TailHolder").transform;
 
             characterCollider = GetComponent<BoxCollider>();
             groundedTestRays = new ValueTuple<Vector3, Ray>[]
             {
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * 0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * -0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * 0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * -0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down))
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * 0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * -0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * 0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * -0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down))
             };
             previousFrameIsGrounded = Falling;
 
@@ -138,6 +160,7 @@ namespace DancingLineFanmade.Level
                 gameObject.tag = "FakePlayer";
                 tailPrefab.tag = "FakePlayer";
             }
+
             state = FakePlayerState.Stopped;
 
             CreateTail();
@@ -148,7 +171,7 @@ namespace DancingLineFanmade.Level
             switch (state)
             {
                 case FakePlayerState.Moving:
-                    selfTransform.Translate(Vector3.forward * speed * Time.deltaTime, Space.Self);
+                    selfTransform.Translate(Vector3.forward * (speed * Time.deltaTime), Space.Self);
                     if (tail && !Falling)
                     {
                         tail.position = (tailPosition + selfTransform.position) * 0.5f;
@@ -156,6 +179,7 @@ namespace DancingLineFanmade.Level
                         tail.position = new Vector3(tail.position.x, selfTransform.position.y, tail.position.z);
                         tail.LookAt(selfTransform);
                     }
+
                     if (previousFrameIsGrounded != Falling)
                     {
                         previousFrameIsGrounded = Falling;
@@ -163,10 +187,16 @@ namespace DancingLineFanmade.Level
                         else
                         {
                             CreateTail();
-                            Destroy(Instantiate(dustParticle, new Vector3(selfTransform.localPosition.x, selfTransform.localPosition.y - selfTransform.lossyScale.y * 0.5f + 0.2f, selfTransform.localPosition.z), Quaternion.Euler(90f, 0f, 0f)), 2f);
+                            Destroy(
+                                Instantiate(dustParticle,
+                                    new Vector3(selfTransform.localPosition.x,
+                                        selfTransform.localPosition.y - selfTransform.lossyScale.y * 0.5f + 0.2f,
+                                        selfTransform.localPosition.z), Quaternion.Euler(90f, 0f, 0f)), 2f);
                         }
                     }
-                    if (LevelManager.GameState == GameStatus.Died || LevelManager.GameState == GameStatus.Moving) state = FakePlayerState.Stopped;
+
+                    if (LevelManager.GameState == GameStatus.Died || LevelManager.GameState == GameStatus.Moving)
+                        state = FakePlayerState.Stopped;
 #if UNITY_EDITOR
                     if (!synchronismWithPlayer)
                     {
@@ -189,21 +219,23 @@ namespace DancingLineFanmade.Level
 
         internal void CreateTail()
         {
-            Quaternion now = Quaternion.Euler(selfTransform.localEulerAngles);
-            float offset = tailPrefab.transform.localScale.z * 0.5f;
+            var now = Quaternion.Euler(selfTransform.localEulerAngles);
+            var offset = tailPrefab.transform.localScale.z * 0.5f;
 
             if (tail)
             {
-                Quaternion last = Quaternion.Euler(tail.transform.localEulerAngles);
-                float angle = Quaternion.Angle(last, now);
-                if (angle >= 0f && angle <= 90f) offset = 0.5f * Mathf.Tan(Mathf.PI / 180f * angle * 0.5f);
+                var last = Quaternion.Euler(tail.transform.localEulerAngles);
+                var angle = Quaternion.Angle(last, now);
+                if (angle is >= 0f and <= 90f) offset = 0.5f * Mathf.Tan(Mathf.PI / 180f * angle * 0.5f);
                 else offset = -0.5f * Mathf.Tan(Mathf.PI / 180f * ((180f - angle) * 0.5f));
-                Vector3 end = tailPosition + last * Vector3.forward * (TailDistance + offset);
+                var end = tailPosition + last * Vector3.forward * (TailDistance + offset);
                 tail.position = (tailPosition + end) * 0.5f;
                 tail.position = new Vector3(tail.position.x, selfTransform.position.y, tail.position.z);
-                tail.localScale = new Vector3(tail.localScale.x, tail.localScale.y, Vector3.Distance(tailPosition, end));
+                tail.localScale =
+                    new Vector3(tail.localScale.x, tail.localScale.y, Vector3.Distance(tailPosition, end));
                 tail.LookAt(selfTransform.position);
             }
+
             tailPosition = selfTransform.position + now * Vector3.back * Mathf.Abs(offset);
             if (!tailPool.Full)
             {
@@ -231,15 +263,16 @@ namespace DancingLineFanmade.Level
 
         internal void ClearPool()
         {
-            tailPool.DestoryAll();
+            tailPool.ClearAll();
             tail = null;
         }
 
         private void CreateTriggers()
         {
-            GameObject g = LevelManager.CreateTrigger(selfTransform.position, triggerRotation, triggerScale, false, "FakePlayerTurnTrigger " + id);
+            var g = LevelManager.CreateTrigger(selfTransform.position, triggerRotation, triggerScale, false,
+                "FakePlayerTurnTrigger " + id);
             id++;
-            FakePlayerTrigger f = g.AddComponent<FakePlayerTrigger>();
+            var f = g.AddComponent<FakePlayerTrigger>();
             g.transform.parent = triggerHolder;
             f.targetPlayer = this;
             f.type = SetType.Turn;

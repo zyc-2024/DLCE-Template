@@ -23,18 +23,18 @@ namespace DancingLineFanmade.Animated
     {
         private Transform selfTransform;
 
-        [SerializeField] internal UnityEvent onAnimatorStart = new UnityEvent();
-        [SerializeField] internal UnityEvent onAnimatorFinished = new UnityEvent();
+        [SerializeField] internal UnityEvent onAnimatorStart;
+        [SerializeField] internal UnityEvent onAnimatorFinished;
         [SerializeField, EnumToggleButtons] protected TransformType transformType = TransformType.New;
         [SerializeField] protected bool triggeredByTime = true;
-        [SerializeField, MinValue(0f)] protected float triggerTime = 0f;
+        [SerializeField, MinValue(0f)] protected float triggerTime;
         [SerializeField, MinValue(0f)] private float duration = 2f;
-        [SerializeField] private bool offsetTime = false;
-        [SerializeField] protected bool dontRevive = false;
+        [SerializeField] private bool offsetTime;
+        [SerializeField] protected bool dontRevive;
         [SerializeField] private Ease ease = Ease.InOutSine;
         [SerializeField] protected Vector3 originalTransform = Vector3.zero;
 
-        protected bool finished = false;
+        protected bool finished;
         protected Vector3 finalTransform = Vector3.zero;
         protected int index;
 
@@ -75,13 +75,14 @@ namespace DancingLineFanmade.Animated
         {
             index = Player.Instance.Checkpoints.Count;
 
-            switch (type)
+            return type switch
             {
-                case AnimatorType.Position: return selfTransform.DOLocalMove(finalTransform, duration).SetEase(ease);
-                case AnimatorType.Rotation: return selfTransform.DOLocalRotate(finalTransform, duration, rotateMode).SetEase(ease);
-                case AnimatorType.Scale: return selfTransform.DOScale(finalTransform, duration).SetEase(ease);
-                default: return null;
-            }
+                AnimatorType.Position => selfTransform.DOLocalMove(finalTransform, duration).SetEase(ease),
+                AnimatorType.Rotation => selfTransform.DOLocalRotate(finalTransform, duration, rotateMode)
+                    .SetEase(ease),
+                AnimatorType.Scale => selfTransform.DOScale(finalTransform, duration).SetEase(ease),
+                _ => null
+            };
         }
     }
 }

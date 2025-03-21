@@ -4,6 +4,8 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DancingLineFanmade.Auto;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
@@ -26,22 +28,21 @@ namespace DancingLineFanmade.Level
         private GameObject startPrefab;
         private GameObject loadingPrefab;
 
-        [Title("Data")]
-        [Required("±ØĞëÑ¡Ìî¹Ø¿¨Êı¾İÎÄ¼ş")] public LevelData levelData;
+        [Title("Data")] [Required("å¿…é¡»é€‰å¡«å…³å¡æ•°æ®æ–‡ä»¶")]
+        public LevelData levelData;
 
-        [Title("Settings")]
-        public Camera sceneCamera;
+        [Title("Settings")] public Camera sceneCamera;
         public Light sceneLight;
         public Material characterMaterial;
         public Vector3 startPosition = Vector3.zero;
         public Vector3 firstDirection = new Vector3(0, 90, 0);
         public Vector3 secondDirection = Vector3.zero;
         [MinValue(1)] public int poolSize = 100;
-        public List<Animator> playedAnimators = new List<Animator>();
-        public List<PlayableDirector> playedTimelines = new List<PlayableDirector>();
+        public List<Animator> playedAnimators;
+        public List<PlayableDirector> playedTimelines;
         public bool allowTurn = true;
-        public bool noDeath = false;
-        public bool drawDirection = false;
+        public bool noDeath;
+        public bool drawDirection;
 
         internal int Speed { get; set; }
         internal AudioSource SoundTrack { get; private set; }
@@ -60,27 +61,29 @@ namespace DancingLineFanmade.Level
         private List<double> timelineProgresses = new List<double>();
         private StartPage startPage;
         private bool debug = true;
-        private bool loading = false;
+        private bool loading;
 
-        private float TailDistance
-        {
-            get => new Vector2(tailPosition.x - selfTransform.position.x, tailPosition.z - selfTransform.position.z).magnitude;
-        }
+        private float TailDistance =>
+            new Vector2(tailPosition.x - selfTransform.position.x, tailPosition.z - selfTransform.position.z).magnitude;
 
         private bool previousFrameIsGrounded;
-        private float groundedRayDistance = 0.05f;
+        private const float groundedRayDistance = 0.05f;
         private ValueTuple<Vector3, Ray>[] groundedTestRays;
         private RaycastHit[] groundedTestResults = new RaycastHit[1];
+
         public bool Falling
         {
             get
             {
-                for (int i = 0; i < groundedTestRays.Length; i++)
+                for (var i = 0; i < groundedTestRays.Length; i++)
                 {
-                    groundedTestRays[i].Item2.origin = selfTransform.position + selfTransform.localRotation * groundedTestRays[i].Item1;
-                    if (Physics.RaycastNonAlloc(groundedTestRays[i].Item2, groundedTestResults, groundedRayDistance + 0.1f, -257, QueryTriggerInteraction.Ignore) > 0)
+                    groundedTestRays[i].Item2.origin = selfTransform.position +
+                                                       selfTransform.localRotation * groundedTestRays[i].Item1;
+                    if (Physics.RaycastNonAlloc(groundedTestRays[i].Item2, groundedTestResults,
+                            groundedRayDistance + 0.1f, -257, QueryTriggerInteraction.Ignore) > 0)
                         return false;
                 }
+
                 return true;
             }
         }
@@ -91,19 +94,19 @@ namespace DancingLineFanmade.Level
         private const float timeInterval = 0.1f;
 
         private GameEvents events;
-        public GameEvents Events
-        {
-            get => events ? events : (events = GetComponent<GameEvents>() ? GetComponent<GameEvents>() : null);
-        }
+
+        public GameEvents Events =>
+            events ? events : (events = GetComponent<GameEvents>() ? GetComponent<GameEvents>() : null);
 
         private void Awake()
         {
             if (!levelData)
             {
-                Debug.LogError("ÎŞ·¨»ñÈ¡¹Ø¿¨ĞÅÏ¢£¬ÇëÈ·±£¹Ø¿¨Êı¾İÎÄ¼ş£¨Level Data£©ÌîÑ¡ÕıÈ·ÇÒ²»Îª¿Õ");
-                LevelManager.DialogBox("¾¯¸æ", "ÎŞ·¨»ñÈ¡¹Ø¿¨ĞÅÏ¢£¬ÇëÈ·±£¹Ø¿¨Êı¾İÎÄ¼ş£¨Level Data£©ÌîÑ¡ÕıÈ·ÇÒ²»Îª¿Õ", "È·¶¨", true);
+                Debug.LogError("æ— æ³•è·å–å…³å¡ä¿¡æ¯ï¼Œè¯·ç¡®ä¿å…³å¡æ•°æ®æ–‡ä»¶ï¼ˆLevel Dataï¼‰å¡«é€‰æ­£ç¡®ä¸”ä¸ä¸ºç©º");
+                LevelManager.DialogBox("è­¦å‘Š", "æ— æ³•è·å–å…³å¡ä¿¡æ¯ï¼Œè¯·ç¡®ä¿å…³å¡æ•°æ®æ–‡ä»¶ï¼ˆLevel Dataï¼‰å¡«é€‰æ­£ç¡®ä¸”ä¸ä¸ºç©º", "ç¡®å®š", true);
                 return;
             }
+
             DOTween.Clear();
             Instance = this;
             Rigidbody = GetComponent<Rigidbody>();
@@ -117,15 +120,27 @@ namespace DancingLineFanmade.Level
             characterCollider = GetComponent<BoxCollider>();
             groundedTestRays = new ValueTuple<Vector3, Ray>[]
             {
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * 0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * -0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * 0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
-                new ValueTuple<Vector3, Ray>(characterCollider.center - new Vector3(characterCollider.size.x * -0.5f, characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f), new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down))
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * 0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * -0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * 0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * 0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down)),
+                new ValueTuple<Vector3, Ray>(
+                    characterCollider.center - new Vector3(characterCollider.size.x * -0.5f,
+                        characterCollider.size.y * 0.5f - 0.1f, characterCollider.size.z * -0.5f),
+                    new Ray(Vector3.zero, selfTransform.localRotation * Vector3.down))
             };
             previousFrameIsGrounded = Falling;
 
-            foreach (Animator animator in playedAnimators) animator.speed = 0f;
-            foreach (PlayableDirector director in playedTimelines) director.Pause();
+            foreach (var animator in playedAnimators) animator.speed = 0f;
+            foreach (var director in playedTimelines) director.Pause();
 
             LoadingPage.Instance?.Fade(0f, 0.4f);
 
@@ -166,10 +181,15 @@ namespace DancingLineFanmade.Level
                 loading = true;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            if (Input.GetKeyDown(KeyCode.C) && LevelManager.GameState == GameStatus.Playing) Debug.Log("µ±Ç°Ê±¼ä£º" + AudioManager.Time);
+
+            if (Input.GetKeyDown(KeyCode.C) && LevelManager.GameState == GameStatus.Playing)
+                Debug.Log("å½“å‰æ—¶é—´ï¼š" + AudioManager.Time);
             if (Input.GetKeyDown(KeyCode.D)) debug = !debug;
-            if (Input.GetKeyDown(KeyCode.K) && LevelManager.GameState == GameStatus.Playing) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, null, false);
-            if (Input.GetKeyDown(KeyCode.S) && LevelManager.GameState == GameStatus.Playing) LevelManager.CreateTrigger(selfTransform.position, Vector3.zero, new Vector3(3, 3, 3), false, "CreatedTrigger");
+            if (Input.GetKeyDown(KeyCode.K) && LevelManager.GameState == GameStatus.Playing)
+                LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, null, false);
+            if (Input.GetKeyDown(KeyCode.S) && LevelManager.GameState == GameStatus.Playing)
+                LevelManager.CreateTrigger(selfTransform.position, Vector3.zero, new Vector3(3, 3, 3), false,
+                    "CreatedTrigger");
 
             GetFrame();
 #endif
@@ -183,10 +203,14 @@ namespace DancingLineFanmade.Level
                             LevelManager.GameState = GameStatus.Playing;
                             if (!SoundTrack) SoundTrack = AudioManager.PlayTrack(levelData.soundTrack, 1f);
                             else AudioManager.Play();
-                            foreach (Animator a in playedAnimators) a.speed = 1f;
-                            foreach (PlayableDirector p in playedTimelines) p.Play();
-                            foreach (PlayAnimator p in FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in p.animators) if (s.played) s.PlayAnimator();
-                            foreach (FakePlayer f in FindObjectsOfType<FakePlayer>(true)) if (f.playing) f.state = FakePlayerState.Moving;
+                            foreach (var a in playedAnimators) a.speed = 1f;
+                            foreach (var p in playedTimelines) p.Play();
+                            foreach (var p in FindObjectsOfType<PlayAnimator>(true))
+                            foreach (var s in p.animators.Where(s => s.played))
+                                s.PlayAnimator();
+                            foreach (var f in FindObjectsOfType<FakePlayer>(true))
+                                if (f.playing)
+                                    f.state = FakePlayerState.Moving;
                             CreateTail();
                             Events?.Invoke(1);
                             if (startPage)
@@ -194,17 +218,20 @@ namespace DancingLineFanmade.Level
                                 startPage.Hide();
                                 startPage = null;
                             }
+
                             Cursor.visible = false;
                         }
+
                         break;
                     case GameStatus.Playing:
                         if (LevelManager.Clicked && !Falling && !disallowInput) Turn();
                         break;
                 }
             }
+
             if (LevelManager.GameState == GameStatus.Playing || LevelManager.GameState == GameStatus.Moving)
             {
-                selfTransform.Translate(Vector3.forward * Speed * Time.deltaTime, Space.Self);
+                selfTransform.Translate(Vector3.forward * (Speed * Time.deltaTime), Space.Self);
                 if (tail && !Falling)
                 {
                     tail.position = (tailPosition + selfTransform.position) * 0.5f;
@@ -212,6 +239,7 @@ namespace DancingLineFanmade.Level
                     tail.position = new Vector3(tail.position.x, selfTransform.position.y, tail.position.z);
                     tail.LookAt(selfTransform);
                 }
+
                 if (previousFrameIsGrounded != Falling)
                 {
                     previousFrameIsGrounded = Falling;
@@ -223,19 +251,26 @@ namespace DancingLineFanmade.Level
                     else
                     {
                         CreateTail();
-                        Destroy(Instantiate(dustParticle, new Vector3(selfTransform.localPosition.x, selfTransform.localPosition.y - selfTransform.lossyScale.y * 0.5f + 0.2f, selfTransform.localPosition.z), Quaternion.Euler(90f, 0f, 0f)), 2f);
+                        Destroy(
+                            Instantiate(dustParticle,
+                                new Vector3(selfTransform.localPosition.x,
+                                    selfTransform.localPosition.y - selfTransform.lossyScale.y * 0.5f + 0.2f,
+                                    selfTransform.localPosition.z), Quaternion.Euler(90f, 0f, 0f)), 2f);
                         Events?.Invoke(4);
                     }
                 }
             }
-            if (LevelManager.GameState == GameStatus.Playing) SoundTrackProgress = SoundTrack ? (int)(AudioManager.Progress * 100) : 0;
+
+            if (LevelManager.GameState == GameStatus.Playing)
+                SoundTrackProgress = SoundTrack ? (int)(AudioManager.Progress * 100) : 0;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.collider.CompareTag("Obstacle") && !noDeath && LevelManager.GameState == GameStatus.Playing)
             {
-                if (Checkpoints.Count <= 0) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, false);
+                if (Checkpoints.Count <= 0)
+                    LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, false);
                 else LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, collision, true);
             }
         }
@@ -250,21 +285,23 @@ namespace DancingLineFanmade.Level
 
         private void CreateTail()
         {
-            Quaternion now = Quaternion.Euler(selfTransform.localEulerAngles);
-            float offset = tailPrefab.transform.localScale.z * 0.5f;
+            var now = Quaternion.Euler(selfTransform.localEulerAngles);
+            var offset = tailPrefab.transform.localScale.z * 0.5f;
 
             if (tail)
             {
-                Quaternion last = Quaternion.Euler(tail.transform.localEulerAngles);
-                float angle = Quaternion.Angle(last, now);
-                if (angle >= 0f && angle <= 90f) offset = 0.5f * Mathf.Tan(Mathf.PI / 180f * angle * 0.5f);
+                var last = Quaternion.Euler(tail.transform.localEulerAngles);
+                var angle = Quaternion.Angle(last, now);
+                if (angle is >= 0f and <= 90f) offset = 0.5f * Mathf.Tan(Mathf.PI / 180f * angle * 0.5f);
                 else offset = -0.5f * Mathf.Tan(Mathf.PI / 180f * ((180f - angle) * 0.5f));
-                Vector3 end = tailPosition + last * Vector3.forward * (TailDistance + offset);
+                var end = tailPosition + last * Vector3.forward * (TailDistance + offset);
                 tail.position = (tailPosition + end) * 0.5f;
                 tail.position = new Vector3(tail.position.x, selfTransform.position.y, tail.position.z);
-                tail.localScale = new Vector3(tail.localScale.x, tail.localScale.y, Vector3.Distance(tailPosition, end));
+                tail.localScale =
+                    new Vector3(tail.localScale.x, tail.localScale.y, Vector3.Distance(tailPosition, end));
                 tail.LookAt(selfTransform.position);
             }
+
             tailPosition = selfTransform.position + now * Vector3.back * Mathf.Abs(offset);
             if (!tailPool.Full)
             {
@@ -286,30 +323,32 @@ namespace DancingLineFanmade.Level
 
         internal void ClearPool()
         {
-            tailPool.DestoryAll();
+            tailPool.ClearAll();
             tail = null;
         }
 
         internal void GetAnimatorProgresses()
         {
             animatorProgresses.Clear();
-            foreach (Animator a in playedAnimators) animatorProgresses.Add(a.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            foreach (var a in playedAnimators) animatorProgresses.Add(a.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
 
         internal void SetAnimatorProgresses()
         {
-            for (int a = 0; a < playedAnimators.Count; a++) playedAnimators[a].Play(playedAnimators[a].GetCurrentAnimatorClipInfo(0)[0].clip.name, 0, animatorProgresses[a]);
+            for (var a = 0; a < playedAnimators.Count; a++)
+                playedAnimators[a].Play(playedAnimators[a].GetCurrentAnimatorClipInfo(0)[0].clip.name, 0,
+                    animatorProgresses[a]);
         }
 
         internal void GetTimelineProgresses()
         {
             timelineProgresses.Clear();
-            foreach (PlayableDirector p in playedTimelines) timelineProgresses.Add(p.time);
+            foreach (var p in playedTimelines) timelineProgresses.Add(p.time);
         }
 
         internal void SetTimelineProgresses()
         {
-            for (int a = 0; a < playedTimelines.Count; a++)
+            for (var a = 0; a < playedTimelines.Count; a++)
             {
                 playedTimelines[a].time = timelineProgresses[a];
                 playedTimelines[a].Evaluate();
@@ -322,7 +361,7 @@ namespace DancingLineFanmade.Level
             frame++;
             if (Time.realtimeSinceStartup - lastTime < timeInterval) return;
 
-            float time = Time.realtimeSinceStartup - lastTime;
+            var time = Time.realtimeSinceStartup - lastTime;
             fps = frame / time;
 
             lastTime = Time.realtimeSinceStartup;
@@ -331,32 +370,37 @@ namespace DancingLineFanmade.Level
 
         private void OnGUI()
         {
-            GUIStyle style = new GUIStyle();
-            style.normal.textColor = LevelManager.GetColorByContent(sceneCamera.backgroundColor);
-            style.fontSize = 25;
-
-            int finalFps = fps > 999f ? 999 : (int)fps;
-            if (debug)
+            var style = new GUIStyle
             {
-                GUI.Label(new Rect(10, 10, 120, 50), "FPS£º" + finalFps, style);
-                GUI.Label(new Rect(10, 40, 120, 50), "¹Ø¿¨½ø¶È£º" + SoundTrackProgress + "%", style);
-                GUI.Label(new Rect(10, 70, 120, 50), "ÓÎÏ·×´Ì¬£º" + LevelManager.GameState, style);
-                GUI.Label(new Rect(10, 100, 120, 50), "ÏßµÄ×ø±ê£º" + selfTransform.localPosition, style);
-                GUI.Label(new Rect(10, 130, 120, 50), "ÏßµÄ³¯Ïò£º" + selfTransform.localEulerAngles, style);
-                GUI.Label(new Rect(10, 160, 120, 50), "ÒÑ»ñÈ¡·½¿éÊıÁ¿£º" + BlockCount + "/10", style);
-                if (CameraFollower.Instance)
+                normal =
                 {
-                    GUI.Label(new Rect(10, 190, 120, 50), "Ïà»úÆ«ÒÆ£º" + CameraFollower.Instance.rotator.localPosition, style);
-                    GUI.Label(new Rect(10, 220, 120, 50), "Ïà»ú½Ç¶È£º" + CameraFollower.Instance.rotator.localEulerAngles, style);
-                    GUI.Label(new Rect(10, 250, 120, 50), "Ïà»úËõ·Å£º" + CameraFollower.Instance.scale.localScale, style);
-                    GUI.Label(new Rect(10, 280, 120, 50), "ÊÓ³¡´óĞ¡£º" + sceneCamera.fieldOfView, style);
-                }
-                else
-                {
-                    GUI.Label(new Rect(10, 190, 120, 50), "Ïà»úÎ»ÖÃ£º" + sceneCamera.transform.position, style);
-                    GUI.Label(new Rect(10, 220, 120, 50), "Ïà»ú½Ç¶È£º" + sceneCamera.transform.eulerAngles, style);
-                    GUI.Label(new Rect(10, 250, 120, 50), "ÊÓ³¡´óĞ¡£º" + sceneCamera.fieldOfView, style);
-                }
+                    textColor = LevelManager.GetColorByContent(sceneCamera.backgroundColor)
+                },
+                fontSize = 25
+            };
+
+            var finalFps = fps > 999f ? 999 : (int)fps;
+            if (!debug) return;
+            GUI.Label(new Rect(10, 10, 120, 50), "FPSï¼š" + finalFps, style);
+            GUI.Label(new Rect(10, 40, 120, 50), "å…³å¡è¿›åº¦ï¼š" + SoundTrackProgress + "%", style);
+            GUI.Label(new Rect(10, 70, 120, 50), "æ¸¸æˆçŠ¶æ€ï¼š" + LevelManager.GameState, style);
+            GUI.Label(new Rect(10, 100, 120, 50), "çº¿çš„åæ ‡ï¼š" + selfTransform.localPosition, style);
+            GUI.Label(new Rect(10, 130, 120, 50), "çº¿çš„æœå‘ï¼š" + selfTransform.localEulerAngles, style);
+            GUI.Label(new Rect(10, 160, 120, 50), "å·²è·å–æ–¹å—æ•°é‡ï¼š" + BlockCount + "/10", style);
+            if (CameraFollower.Instance)
+            {
+                GUI.Label(new Rect(10, 190, 120, 50), "ç›¸æœºåç§»ï¼š" + CameraFollower.Instance.rotator.localPosition,
+                    style);
+                GUI.Label(new Rect(10, 220, 120, 50), "ç›¸æœºè§’åº¦ï¼š" + CameraFollower.Instance.rotator.localEulerAngles,
+                    style);
+                GUI.Label(new Rect(10, 250, 120, 50), "ç›¸æœºç¼©æ”¾ï¼š" + CameraFollower.Instance.scale.localScale, style);
+                GUI.Label(new Rect(10, 280, 120, 50), "è§†åœºå¤§å°ï¼š" + sceneCamera.fieldOfView, style);
+            }
+            else
+            {
+                GUI.Label(new Rect(10, 190, 120, 50), "ç›¸æœºä½ç½®ï¼š" + sceneCamera.transform.position, style);
+                GUI.Label(new Rect(10, 220, 120, 50), "ç›¸æœºè§’åº¦ï¼š" + sceneCamera.transform.eulerAngles, style);
+                GUI.Label(new Rect(10, 250, 120, 50), "è§†åœºå¤§å°ï¼š" + sceneCamera.fieldOfView, style);
             }
         }
 

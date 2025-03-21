@@ -16,7 +16,7 @@ namespace DancingLineFanmade.UI
         [SerializeField] private Image loadingImage;
 
         private CanvasGroup canvasGroup;
-        private AsyncOperation operation = null;
+        private AsyncOperation operation;
 
         private void Awake()
         {
@@ -36,7 +36,7 @@ namespace DancingLineFanmade.UI
 
         public void Load(string sceneName)
         {
-            Color backgroundColor = Player.Instance.sceneCamera.backgroundColor;
+            var backgroundColor = Player.Instance.sceneCamera.backgroundColor;
 
             background.color = backgroundColor;
             loadingText.color = LevelManager.GetColorByContent(backgroundColor);

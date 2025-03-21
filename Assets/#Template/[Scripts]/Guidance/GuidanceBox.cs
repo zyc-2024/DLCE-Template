@@ -18,8 +18,8 @@ namespace DancingLineFanmade.Guidance
         private GameObject triggerEffect;
         private int index;
 
-        internal bool triggered = false;
-        internal bool displayed = false;
+        internal bool triggered;
+        internal bool displayed;
 
         public SpriteRenderer Renderer
         {
@@ -30,10 +30,7 @@ namespace DancingLineFanmade.Guidance
             }
         }
 
-        private float Distance
-        {
-            get => (selfTransform.position - playerTransform.position).sqrMagnitude;
-        }
+        private float Distance => (selfTransform.position - playerTransform.position).sqrMagnitude;
 
         public void SetColor(Color color)
         {
@@ -52,7 +49,8 @@ namespace DancingLineFanmade.Guidance
         private void Update()
         {
             if (!triggered && Distance <= appearDistance && !Renderer.enabled) Appear();
-            if (LevelManager.Clicked && !triggered && Distance <= triggerDistance && canBeTriggered && LevelManager.GameState == GameStatus.Playing && !Player.Instance.disallowInput)
+            if (LevelManager.Clicked && !triggered && Distance <= triggerDistance && canBeTriggered &&
+                LevelManager.GameState == GameStatus.Playing && !Player.Instance.disallowInput)
                 Trigger();
         }
 
@@ -65,25 +63,23 @@ namespace DancingLineFanmade.Guidance
 
         internal void Appear()
         {
-            if (!displayed)
-            {
-                displayed = true;
-                index = Player.Instance.Checkpoints.Count;
+            if (displayed) return;
+            displayed = true;
+            index = Player.Instance.Checkpoints.Count;
 
-                SpriteRenderer[] renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
-                foreach (SpriteRenderer r in renderers) r.enabled = true;
-                Renderer.enabled = true;
+            var renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
+            foreach (var r in renderers) r.enabled = true;
+            Renderer.enabled = true;
 
-                LevelManager.revivePlayer += ResetData;
-            }
+            LevelManager.revivePlayer += ResetData;
         }
 
         internal void Disappear(bool onlyBox)
         {
-            SpriteRenderer[] renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
+            var renderers = selfTransform.GetComponentsInChildren<SpriteRenderer>();
             if (!onlyBox)
             {
-                foreach (SpriteRenderer r in renderers) r.enabled = false;
+                foreach (var r in renderers) r.enabled = false;
                 Renderer.enabled = false;
             }
             else Renderer.enabled = false;

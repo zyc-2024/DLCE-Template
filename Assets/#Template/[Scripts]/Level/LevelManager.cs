@@ -32,6 +32,7 @@ namespace DancingLineFanmade.Level
     public static class LevelManager
     {
         private static GameStatus gameState = GameStatus.Waiting;
+
         public static GameStatus GameState
         {
             get => gameState;
@@ -39,11 +40,14 @@ namespace DancingLineFanmade.Level
         }
 
         public static bool getInput = true;
+
         public static bool Clicked
         {
             get
             {
-                if (getInput) return Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+                if (getInput)
+                    return Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) ||
+                           Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
                 else return false;
             }
         }
@@ -51,10 +55,7 @@ namespace DancingLineFanmade.Level
         /// <summary>
         /// Shorthand for writing game default gravity(0f, -9.3f, 0f).
         /// </summary>
-        public static Vector3 defaultGravity
-        {
-            get => new Vector3(0f, -9.3f, 0f);
-        }
+        public static Vector3 defaultGravity => new Vector3(0f, -9.3f, 0f);
 
         public static Vector3 PlayerPosition
         {
@@ -64,11 +65,7 @@ namespace DancingLineFanmade.Level
 
         public static Vector3 CameraPosition
         {
-            get
-            {
-                if (CameraFollower.Instance) return CameraFollower.Instance.transform.position;
-                else return Vector3.zero;
-            }
+            get => CameraFollower.Instance ? CameraFollower.Instance.transform.position : Vector3.zero;
             set
             {
                 if (CameraFollower.Instance) CameraFollower.Instance.transform.position = value;
@@ -80,27 +77,35 @@ namespace DancingLineFanmade.Level
 
         public static Vector3 Convert(this Vector3 vector3, bool positive = true)
         {
-            int x = (int)Mathf.Abs(Mathf.Floor(vector3.x / 360));
-            int y = (int)Mathf.Abs(Mathf.Floor(vector3.y / 360));
-            int z = (int)Mathf.Abs(Mathf.Floor(vector3.z / 360));
-            return positive ? new Vector3(vector3.x + 360 * x, vector3.y + 360 * y, vector3.z + 360 * z) : new Vector3(vector3.x - 360 * x, vector3.y - 360 * y, vector3.z - 360 * z);
+            var x = (int)Mathf.Abs(Mathf.Floor(vector3.x / 360));
+            var y = (int)Mathf.Abs(Mathf.Floor(vector3.y / 360));
+            var z = (int)Mathf.Abs(Mathf.Floor(vector3.z / 360));
+            return positive
+                ? new Vector3(vector3.x + 360 * x, vector3.y + 360 * y, vector3.z + 360 * z)
+                : new Vector3(vector3.x - 360 * x, vector3.y - 360 * y, vector3.z - 360 * z);
         }
 
         public static void DialogBox(string title, string message, string ok, bool stopPlaying)
         {
 #if UNITY_EDITOR
-            if (EditorUtility.DisplayDialog(title, message, ok)) if (stopPlaying) EditorApplication.isPlaying = false;
+            if (EditorUtility.DisplayDialog(title, message, ok))
+                if (stopPlaying)
+                    EditorApplication.isPlaying = false;
 #endif
         }
 
-        public static void PlayerDeath(Player player, DieReason reason, GameObject cubes = null, Collision collision = null, bool revive = false)
+        public static void PlayerDeath(Player player, DieReason reason, GameObject cubes = null,
+            Collision collision = null, bool revive = false)
         {
             trackFadeOut = AudioManager.FadeOut(0f, 10f);
             if (CameraFollower.Instance) CameraFollower.Instance.KillAll();
             player.allowTurn = false;
-            foreach (Animator a in player.playedAnimators) a.speed = 0f;
-            foreach (PlayableDirector p in player.playedTimelines) p.Pause();
-            foreach (PlayAnimator p in Object.FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in p.animators) if (!s.dontRevive) s.StopAnimator();
+            foreach (var a in player.playedAnimators) a.speed = 0f;
+            foreach (var p in player.playedTimelines) p.Pause();
+            foreach (var p in Object.FindObjectsOfType<PlayAnimator>(true))
+            foreach (var s in p.animators)
+                if (!s.dontRevive)
+                    s.StopAnimator();
             player.Events?.Invoke(5);
             switch (reason)
             {
@@ -118,34 +123,38 @@ namespace DancingLineFanmade.Level
                     GameState = GameStatus.Moving;
                     break;
             }
-            if (!revive) GameOverNormal(false); else GameOverRevive();
+
+            if (!revive) GameOverNormal(false);
+            else GameOverRevive();
             Cursor.visible = true;
         }
 
         public static void GameOverNormal(bool complete)
         {
-            float percentage = complete ? 1f : AudioManager.Progress;
+            var percentage = complete ? 1f : AudioManager.Progress;
 
-            if (GameState == GameStatus.Died || GameState == GameStatus.Completed || GameState == GameStatus.Moving)
+            if (GameState is GameStatus.Died or GameStatus.Completed or GameStatus.Moving)
                 LevelUI.Instance.NormalPage(percentage, Player.Instance.BlockCount);
         }
 
         public static void GameOverRevive()
         {
-            if (GameState == GameStatus.Died || GameState == GameStatus.Moving) LevelUI.Instance.RevivePage(AudioManager.Progress);
+            if (GameState is GameStatus.Died or GameStatus.Moving) LevelUI.Instance.RevivePage(AudioManager.Progress);
         }
 
-        public static void InitPlayerPosition(Player player, Vector3 position, bool changeDirection, Direction direction = Direction.First)
+        public static void InitPlayerPosition(Player player, Vector3 position, bool changeDirection,
+            Direction direction = Direction.First)
         {
             PlayerPosition = position;
             CameraPosition = position;
             if (changeDirection)
             {
-                switch (direction)
+                player.transform.eulerAngles = direction switch
                 {
-                    case Direction.First: player.transform.eulerAngles = player.firstDirection; break;
-                    case Direction.Second: player.transform.eulerAngles = player.secondDirection; break;
-                }
+                    Direction.First => player.firstDirection,
+                    Direction.Second => player.secondDirection,
+                    _ => player.transform.eulerAngles
+                };
             }
         }
 
@@ -170,7 +179,8 @@ namespace DancingLineFanmade.Level
 
         public static bool CompareCheckpointIndex(int index)
         {
-            if (index > Player.Instance.Checkpoints.Count - 1) return true; else return false;
+            if (index > Player.Instance.Checkpoints.Count - 1) return true;
+            else return false;
         }
 
         public static void SetFPSLimit(int frame)
@@ -197,7 +207,8 @@ namespace DancingLineFanmade.Level
 #else
             if (Clicked)
             {
-                if (EventSystem.current.IsPointerOverGameObject() && CheckRaycastObjects(Input.mousePosition)) return true;
+                if (EventSystem.current.IsPointerOverGameObject() && CheckRaycastObjects(Input.mousePosition))
+                    return true;
                 else return false;
             }
             else return false;
@@ -206,7 +217,7 @@ namespace DancingLineFanmade.Level
 
         private static bool CheckRaycastObjects(Vector3 position)
         {
-            PointerEventData data = new PointerEventData(EventSystem.current);
+            var data = new PointerEventData(EventSystem.current);
             data.pressPosition = new Vector2(position.x, position.y);
             data.position = new Vector2(position.x, position.y);
 
@@ -215,11 +226,14 @@ namespace DancingLineFanmade.Level
             return results.Count > 0;
         }
 
-        public static GameObject CreateTrigger(Vector3 position, Vector3 rotation, Vector3 scale, bool local, string name)
+        public static GameObject CreateTrigger(Vector3 position, Vector3 rotation, Vector3 scale, bool local,
+            string name)
         {
-            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            if (local) obj.transform.localPosition = position; else obj.transform.position = position;
-            if (local) obj.transform.localEulerAngles = rotation; else obj.transform.eulerAngles = rotation;
+            var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            if (local) obj.transform.localPosition = position;
+            else obj.transform.position = position;
+            if (local) obj.transform.localEulerAngles = rotation;
+            else obj.transform.eulerAngles = rotation;
             obj.transform.localScale = scale;
             obj.GetComponent<BoxCollider>().isTrigger = true;
             obj.GetComponent<MeshRenderer>().enabled = false;
@@ -229,7 +243,7 @@ namespace DancingLineFanmade.Level
 
         public static Color GetColorByContent(Color color)
         {
-            float brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
+            var brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
             return brightness > 0.6f ? Color.black : Color.white;
         }
 

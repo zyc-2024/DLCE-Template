@@ -15,7 +15,7 @@ namespace DancingLineFanmade.UI
         private void OnEnable()
         {
 #if UNITY_EDITOR
-            foreach (RectTransform g in moveUp) g.gameObject.SetActive(true);
+            foreach (var g in moveUp) g.gameObject.SetActive(true);
 #else
             foreach(RectTransform g in moveUp) g.gameObject.SetActive(false);
 #endif
@@ -23,18 +23,20 @@ namespace DancingLineFanmade.UI
 
         public void Hide()
         {
-            foreach (RectTransform l in moveLeft)
+            foreach (var l in moveLeft)
             {
                 if (l.GetComponent<Button>()) l.GetComponent<Button>().interactable = false;
-                l.DOAnchorPos(new Vector2(-120f, l.anchoredPosition.y), 0.4f).SetEase(Ease.InSine).OnComplete(() => { Destroy(gameObject); });
+                l.DOAnchorPos(new Vector2(-120f, l.anchoredPosition.y), 0.4f).SetEase(Ease.InSine)
+                    .OnComplete(() => { Destroy(gameObject); });
             }
-            foreach (RectTransform d in moveDown)
+
+            foreach (var d in moveDown)
             {
                 if (d.GetComponent<Button>()) d.GetComponent<Button>().interactable = false;
                 d.DOAnchorPos(new Vector2(d.anchoredPosition.x, -250f), 0.4f).SetEase(Ease.InSine);
             }
 #if UNITY_EDITOR
-            foreach (RectTransform u in moveUp)
+            foreach (var u in moveUp)
             {
                 if (u.GetComponent<Toggle>()) u.GetComponent<Toggle>().interactable = false;
                 u.DOAnchorPos(new Vector2(u.anchoredPosition.x, 100f), 0.4f).SetEase(Ease.InSine);

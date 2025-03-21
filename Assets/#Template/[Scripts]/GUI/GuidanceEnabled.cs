@@ -10,37 +10,36 @@ namespace DancingLineFanmade.Guidance
         [SerializeField] private Image background;
         [SerializeField] private Sprite on;
         [SerializeField] private Sprite off;
-        [SerializeField] private new bool enabled = false;
+        [SerializeField] private bool available;
 
         private GuidanceController controller;
 
         private void Start()
         {
             controller = FindObjectOfType<GuidanceController>();
-            SetGuidance(enabled);
+            SetGuidance(available);
 
-            if (!controller.boxHolder)
+            if (controller.boxHolder) return;
+            GetComponent<Button>().interactable = false;
+            foreach (var i in GetComponentsInChildren<Image>())
             {
-                GetComponent<Button>().interactable = false;
-                foreach (Image i in GetComponentsInChildren<Image>())
-                {
-                    i.enabled = false;
-                    i.raycastTarget = false;
-                }
-                background.enabled = false;
-                background.raycastTarget = false;
+                i.enabled = false;
+                i.raycastTarget = false;
             }
+
+            background.enabled = false;
+            background.raycastTarget = false;
         }
 
         public void OnClick()
         {
-            enabled = !enabled;
-            SetGuidance(enabled);
+            available = !available;
+            SetGuidance(available);
         }
 
-        private void SetGuidance(bool enabled)
+        private void SetGuidance(bool n_available)
         {
-            if (enabled)
+            if (n_available)
             {
                 image.sprite = on;
                 if (controller.boxHolder) controller.boxHolder.gameObject.SetActive(true);

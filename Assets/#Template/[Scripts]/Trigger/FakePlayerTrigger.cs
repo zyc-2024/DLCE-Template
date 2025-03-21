@@ -16,11 +16,17 @@ namespace DancingLineFanmade.Trigger
     {
         [SerializeField] internal FakePlayer targetPlayer;
         [SerializeField, EnumToggleButtons] internal SetType type = SetType.Turn;
-        [SerializeField, ShowIf("type", SetType.ChangeDirection)] private Vector3 firstDirection = new Vector3(0, 90, 0);
-        [SerializeField, ShowIf("type", SetType.ChangeDirection)] private Vector3 secondDirection = Vector3.zero;
-        [SerializeField, ShowIf("type", SetType.SetState)] private FakePlayerState state = FakePlayerState.Moving;
 
-        private bool used = false;
+        [SerializeField, ShowIf("type", SetType.ChangeDirection)]
+        private Vector3 firstDirection = new Vector3(0, 90, 0);
+
+        [SerializeField, ShowIf("type", SetType.ChangeDirection)]
+        private Vector3 secondDirection = Vector3.zero;
+
+        [SerializeField, ShowIf("type", SetType.SetState)]
+        private FakePlayerState state = FakePlayerState.Moving;
+
+        private bool used;
         private int index;
 
         private void OnTriggerEnter(Collider other)
@@ -37,26 +43,31 @@ namespace DancingLineFanmade.Trigger
                         targetPlayer.state = state;
                         switch (state)
                         {
-                            case FakePlayerState.Moving: targetPlayer.playing = true; break;
-                            case FakePlayerState.Stopped: targetPlayer.playing = false; break;
+                            case FakePlayerState.Moving:
+                                targetPlayer.playing = true;
+                                break;
+                            case FakePlayerState.Stopped:
+                                targetPlayer.playing = false;
+                                break;
                         }
+
                         break;
                 }
             }
-            if (other.CompareTag("FakePlayer") || other.CompareTag("Obstacle"))
+
+            if (!other.CompareTag("FakePlayer") && !other.CompareTag("Obstacle")) return;
+            switch (type)
             {
-                switch (type)
-                {
-                    case SetType.Turn:
-                        if (!used)
-                        {
-                            index = Player.Instance.Checkpoints.Count;
-                            LevelManager.revivePlayer += ResetData;
-                            targetPlayer?.Turn();
-                            used = true;
-                        }
-                        break;
-                }
+                case SetType.Turn:
+                    if (!used)
+                    {
+                        index = Player.Instance.Checkpoints.Count;
+                        LevelManager.revivePlayer += ResetData;
+                        targetPlayer?.Turn();
+                        used = true;
+                    }
+
+                    break;
             }
         }
 
@@ -73,13 +84,11 @@ namespace DancingLineFanmade.Trigger
 
         private void OnDrawGizmos()
         {
-            if (type == SetType.ChangeDirection)
-            {
-                LevelManager.DrawDirection(transform, 3);
+            if (type != SetType.ChangeDirection) return;
+            LevelManager.DrawDirection(transform, 3);
 
-                Gizmos.color = Color.white;
-                Gizmos.DrawWireCube(transform.position, Vector3.one);
-            }
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireCube(transform.position, Vector3.one);
         }
     }
 }

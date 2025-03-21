@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace DancingLineFanmade.Trigger
@@ -53,12 +54,13 @@ namespace DancingLineFanmade.Trigger
 
         private void Start()
         {
-            foreach (SingleAnimator a in animators) a.IntiAnimator();
+            foreach (var a in animators) a.IntiAnimator();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")) foreach (SingleAnimator a in animators) if (!a.played) a.PlayAnimator();
+            if (!other.CompareTag("Player")) return;
+            foreach (var a in animators.Where(a => !a.played)) a.PlayAnimator();
         }
     }
 }

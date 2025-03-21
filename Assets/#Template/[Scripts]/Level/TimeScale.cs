@@ -10,30 +10,24 @@ namespace DancingLineFanmade.Level
         [SerializeField, Range(0f, 3f)] private float enabledValue = 1.25f;
         [SerializeField, Range(0f, 3f)] private float disabledValue = 1f;
 
-        private new bool enabled = false;
+        private new bool enabled;
 
         private void Update()
         {
-            if (LevelManager.GameState == GameStatus.Playing)
+            if (LevelManager.GameState != GameStatus.Playing) return;
+            if (!enabled)
             {
-                if (!enabled)
-                {
-                    if (Input.GetKeyDown(key))
-                    {
-                        AudioManager.Pitch = enabledValue;
-                        Time.timeScale = enabledValue;
-                        enabled = true;
-                    }
-                }
-                else
-                {
-                    if (Input.GetKeyDown(key))
-                    {
-                        AudioManager.Pitch = disabledValue;
-                        Time.timeScale = disabledValue;
-                        enabled = false;
-                    }
-                }
+                if (!Input.GetKeyDown(key)) return;
+                AudioManager.Pitch = enabledValue;
+                Time.timeScale = enabledValue;
+                enabled = true;
+            }
+            else
+            {
+                if (!Input.GetKeyDown(key)) return;
+                AudioManager.Pitch = disabledValue;
+                Time.timeScale = disabledValue;
+                enabled = false;
             }
         }
 #endif

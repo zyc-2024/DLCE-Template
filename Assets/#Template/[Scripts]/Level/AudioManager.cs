@@ -7,7 +7,7 @@ namespace DancingLineFanmade.Level
     {
         public static void PlayClip(AudioClip clip, float volume)
         {
-            AudioSource audioSource = new GameObject("One shot sound: " + clip.name).AddComponent<AudioSource>();
+            var audioSource = new GameObject("One shot sound: " + clip.name).AddComponent<AudioSource>();
             audioSource.clip = clip;
             audioSource.volume = volume;
             audioSource.Play();
@@ -16,7 +16,7 @@ namespace DancingLineFanmade.Level
 
         public static AudioSource PlayTrack(AudioClip clip, float volume)
         {
-            AudioSource audioSource = new GameObject(clip.name).AddComponent<AudioSource>();
+            var audioSource = new GameObject(clip.name).AddComponent<AudioSource>();
             audioSource.clip = clip;
             audioSource.volume = volume;
             audioSource.Play();
@@ -41,10 +41,7 @@ namespace DancingLineFanmade.Level
             set => Player.Instance.SoundTrack.volume = value;
         }
 
-        public static float Progress
-        {
-            get => Player.Instance.SoundTrack.time / Player.Instance.SoundTrack.clip.length;
-        }
+        public static float Progress => Player.Instance.SoundTrack.time / Player.Instance.SoundTrack.clip.length;
 
         public static void Stop()
         {
@@ -58,7 +55,7 @@ namespace DancingLineFanmade.Level
 
         public static Tween FadeOut(float volume, float duration)
         {
-            return Player.Instance.SoundTrack.DOFade(volume, duration).SetEase(Ease.Linear).OnComplete(new TweenCallback(Stop));
+            return Player.Instance.SoundTrack.DOFade(volume, duration).SetEase(Ease.Linear).OnComplete(Stop);
         }
     }
 }

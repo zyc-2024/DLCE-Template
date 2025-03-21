@@ -15,7 +15,8 @@ namespace DancingLineFanmade.Trigger
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")) foreach (SingleImage s in images) s.SetColor(duration, ease);
+            if (!other.CompareTag("Player")) return;
+            foreach (var s in images) s.SetColor(duration, ease);
         }
     }
 }

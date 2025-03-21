@@ -19,30 +19,41 @@ namespace DancingLineFanmade.Trigger
         private Transform core;
         private Transform revivePosition;
 
-        [Title("Player")]
-        [SerializeField] private Direction direction = Direction.First;
+        [Title("Player")] [SerializeField] private Direction direction = Direction.First;
 
-        [SerializeField, HorizontalGroup("Camera")] private new CameraSettings camera = new CameraSettings();
-        [SerializeField, HorizontalGroup("Camera"), HideLabel] private bool manualCamera = false;
+        [SerializeField, HorizontalGroup("Camera")]
+        private new CameraSettings camera = new CameraSettings();
 
-        [SerializeField, HorizontalGroup("Fog")] private FogSettings fog = new FogSettings();
-        [SerializeField, HorizontalGroup("Fog"), HideLabel] private bool manualFog = false;
+        [SerializeField, HorizontalGroup("Camera"), HideLabel]
+        private bool manualCamera;
 
-        [SerializeField, HorizontalGroup("Light")] private new LightSettings light = new LightSettings();
-        [SerializeField, HorizontalGroup("Light"), HideLabel] private bool manualLight = false;
+        [SerializeField, HorizontalGroup("Fog")]
+        private FogSettings fog = new FogSettings();
 
-        [SerializeField, HorizontalGroup("Ambient")] private AmbientSettings ambient = new AmbientSettings();
-        [SerializeField, HorizontalGroup("Ambient"), HideLabel] private bool manualAmbient = false;
+        [SerializeField, HorizontalGroup("Fog"), HideLabel]
+        private bool manualFog;
 
-        [Title("Colors")]
-        [SerializeField, TableList] private List<SingleColor> materialColorsAuto = new List<SingleColor>();
+        [SerializeField, HorizontalGroup("Light")]
+        private new LightSettings light = new LightSettings();
+
+        [SerializeField, HorizontalGroup("Light"), HideLabel]
+        private bool manualLight;
+
+        [SerializeField, HorizontalGroup("Ambient")]
+        private AmbientSettings ambient = new AmbientSettings();
+
+        [SerializeField, HorizontalGroup("Ambient"), HideLabel]
+        private bool manualAmbient;
+
+        [Title("Colors")] [SerializeField, TableList]
+        private List<SingleColor> materialColorsAuto = new List<SingleColor>();
+
         [SerializeField, TableList] private List<SingleColor> materialColorsManual = new List<SingleColor>();
 
         [SerializeField, TableList] private List<SingleImage> imageColorsAuto = new List<SingleImage>();
         [SerializeField, TableList] private List<SingleImage> imageColorsManual = new List<SingleImage>();
 
-        [Title("Event")]
-        [SerializeField] private UnityEvent onRevive = new UnityEvent();
+        [Title("Event")] [SerializeField] private UnityEvent onRevive = new UnityEvent();
 
         private float trackTime;
         private int trackProgress;
@@ -86,8 +97,8 @@ namespace DancingLineFanmade.Trigger
             if (!manualFog) fog = fog.GetFog();
             if (!manualLight) light = light.GetLight(player.sceneLight);
             if (!manualAmbient) ambient = ambient.GetAmbient();
-            foreach (SingleColor s in materialColorsAuto) s.GetColor();
-            foreach (SingleImage s in imageColorsAuto) s.GetColor();
+            foreach (var s in materialColorsAuto) s.GetColor();
+            foreach (var s in imageColorsAuto) s.GetColor();
 
             trackTime = AudioManager.Time;
             trackProgress = player.SoundTrackProgress;
@@ -96,9 +107,14 @@ namespace DancingLineFanmade.Trigger
             playerFirstDirection = player.firstDirection;
             playerSecondDirection = player.secondDirection;
 
-            foreach (SetActive s in actives) if (!s.activeOnAwake) s.AddRevives();
-            foreach (PlayAnimator a in animators) foreach (SingleAnimator s in a.animators) if (!s.dontRevive) s.GetState();
-            foreach (FakePlayer f in fakes) f.GetData();
+            foreach (var s in actives)
+                if (!s.activeOnAwake)
+                    s.AddRevives();
+            foreach (var a in animators)
+            foreach (var s in a.animators)
+                if (!s.dontRevive)
+                    s.GetState();
+            foreach (var f in fakes) f.GetData();
             player.GetAnimatorProgresses();
             player.GetTimelineProgresses();
         }
@@ -127,10 +143,10 @@ namespace DancingLineFanmade.Trigger
             fog.SetFog(player.sceneCamera);
             light.SetLight(player.sceneLight);
             ambient.SetAmbient();
-            foreach (SingleColor s in materialColorsAuto) s.SetColor();
-            foreach (SingleColor s in materialColorsManual) s.SetColor();
-            foreach (SingleImage s in imageColorsAuto) s.SetColor();
-            foreach (SingleImage s in imageColorsManual) s.SetColor();
+            foreach (var s in materialColorsAuto) s.SetColor();
+            foreach (var s in materialColorsManual) s.SetColor();
+            foreach (var s in imageColorsAuto) s.SetColor();
+            foreach (var s in imageColorsManual) s.SetColor();
 
             AudioManager.Stop();
             AudioManager.Time = trackTime;
@@ -143,9 +159,16 @@ namespace DancingLineFanmade.Trigger
             player.firstDirection = playerFirstDirection;
             player.secondDirection = playerSecondDirection;
             LevelManager.InitPlayerPosition(player, revivePosition.position, true, direction);
-            foreach (SetActive s in actives) if (!s.activeOnAwake) s.Revive();
-            foreach (PlayAnimator a in animators) foreach (SingleAnimator s in a.animators) if (!s.dontRevive && s.played) s.SetState();
-            foreach (FakePlayer f in fakes) if (f.playing) f.ResetState();
+            foreach (var s in actives)
+                if (!s.activeOnAwake)
+                    s.Revive();
+            foreach (var a in animators)
+            foreach (var s in a.animators)
+                if (!s.dontRevive && s.played)
+                    s.SetState();
+            foreach (var f in fakes)
+                if (f.playing)
+                    f.ResetState();
             player.SetAnimatorProgresses();
             player.SetTimelineProgresses();
 

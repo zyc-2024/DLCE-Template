@@ -6,18 +6,15 @@ namespace DancingLineFanmade.Trigger
     [DisallowMultipleComponent, RequireComponent(typeof(Collider), typeof(MeshRenderer))]
     public class Gem : MonoBehaviour
     {
-        [SerializeField] private bool fake = false;
+        [SerializeField] private bool fake;
 
         private Player player;
         private GameObject effectPrefab;
         private GameObject effect;
-        private bool got = false;
+        private bool got;
         private int index;
 
-        private MeshRenderer MeshRenderer
-        {
-            get => GetComponent<MeshRenderer>();
-        }
+        private MeshRenderer MeshRenderer => GetComponent<MeshRenderer>();
 
         private void Start()
         {
@@ -33,16 +30,15 @@ namespace DancingLineFanmade.Trigger
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player") && !got && !fake)
-            {
-                got = true;
-                player.Events?.Invoke(6);
-                MeshRenderer.enabled = false;
-                index = player.Checkpoints.Count;
-                if (QualitySettings.GetQualityLevel() > 0) effect = Instantiate(effectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
-                player.BlockCount++;
-                LevelManager.revivePlayer += ResetData;
-            }
+            if (!other.CompareTag("Player") || got || fake) return;
+            got = true;
+            player.Events?.Invoke(6);
+            MeshRenderer.enabled = false;
+            index = player.Checkpoints.Count;
+            if (QualitySettings.GetQualityLevel() > 0)
+                effect = Instantiate(effectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
+            player.BlockCount++;
+            LevelManager.revivePlayer += ResetData;
         }
 
         private void ResetData()
