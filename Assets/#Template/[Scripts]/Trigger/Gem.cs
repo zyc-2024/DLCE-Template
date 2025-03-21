@@ -36,6 +36,7 @@ namespace DancingLineFanmade.Trigger
             if (other.CompareTag("Player") && !got && !fake)
             {
                 got = true;
+                player.Events?.Invoke(6);
                 MeshRenderer.enabled = false;
                 index = player.checkpoints.Count;
                 if (QualitySettings.GetQualityLevel() > 0) effect = Instantiate(effectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));

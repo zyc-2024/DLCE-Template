@@ -52,6 +52,7 @@ namespace DancingLineFanmade.Level
         public Vector3 secondDirection = Vector3.zero;
         [MinValue(1)] public int poolSize = 100;
         public bool isWall = false;
+        public bool drawDirection = false;
 
         [SerializeField] private bool createTurnTrigger = true;
         [SerializeField, ShowIf("@createTurnTrigger")] private bool synchronismWithPlayer = false;
@@ -236,13 +237,17 @@ namespace DancingLineFanmade.Level
 
         private void CreateTriggers()
         {
-            GameObject g = LevelManager.CreateTrigger(selfTransform.position, triggerRotation, triggerScale, false);
+            GameObject g = LevelManager.CreateTrigger(selfTransform.position, triggerRotation, triggerScale, false, "FakePlayerTurnTrigger " + id);
+            id++;
             FakePlayerTrigger f = g.AddComponent<FakePlayerTrigger>();
             g.transform.parent = triggerHolder;
-            g.name = "FakePlayerTurnTrigger " + id;
-            id++;
             f.targetPlayer = this;
             f.type = SetType.Turn;
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (drawDirection) LevelManager.DrawDirection(transform, 4);
         }
 
         [Button("Get Start Position", ButtonSizes.Large)]

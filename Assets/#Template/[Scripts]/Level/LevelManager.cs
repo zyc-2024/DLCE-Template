@@ -39,7 +39,15 @@ namespace DancingLineFanmade.Level
 
         public static bool Clicked
         {
-            get => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return);
+            get => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+        }
+
+        /// <summary>
+        /// Shorthand for writing game default gravity(0f, -9.3f, 0f).
+        /// </summary>
+        public static Vector3 defaultGravity
+        {
+            get => new Vector3(0f, -9.3f, 0f);
         }
 
         public static Vector3 PlayerPosition
@@ -55,7 +63,7 @@ namespace DancingLineFanmade.Level
                 if (CameraFollower.Instance) return CameraFollower.Instance.transform.position;
                 else return Vector3.zero;
             }
-            set 
+            set
             {
                 if (CameraFollower.Instance) CameraFollower.Instance.transform.position = value;
             }
@@ -86,17 +94,18 @@ namespace DancingLineFanmade.Level
             player.allowTurn = false;
             foreach (Animator animator in player.stopOnDieAnimators) animator.speed = 0f;
             foreach (PlayAnimator a in Object.FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (!s.dontRevive) s.StopAnimator();
+            player.Events?.Invoke(5);
             switch (reason)
             {
                 case DieReason.Hit:
                     GameState = GameStatus.Died;
-                    AudioManager.PlayClip(Resources.Load<AudioClip>("Audios/Hit"));
+                    AudioManager.PlayClip(Resources.Load<AudioClip>("Audios/Hit"), 1f);
                     dieCubes = Object.Instantiate(cubes, player.transform.position, player.transform.rotation);
                     dieCubes?.GetComponent<PlayerCubes>().Play(collision);
                     break;
                 case DieReason.Drowned:
                     GameState = GameStatus.Moving;
-                    AudioManager.PlayClip(Resources.Load<AudioClip>("Audios/Drowned"));
+                    AudioManager.PlayClip(Resources.Load<AudioClip>("Audios/Drowned"), 1f);
                     break;
                 case DieReason.Border:
                     GameState = GameStatus.Moving;
@@ -198,7 +207,7 @@ namespace DancingLineFanmade.Level
             return results.Count > 0;
         }
 
-        public static GameObject CreateTrigger(Vector3 position, Vector3 rotation, Vector3 scale, bool local)
+        public static GameObject CreateTrigger(Vector3 position, Vector3 rotation, Vector3 scale, bool local, string name)
         {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             if (local) obj.transform.localPosition = position; else obj.transform.position = position;
@@ -206,6 +215,7 @@ namespace DancingLineFanmade.Level
             obj.transform.localScale = scale;
             obj.GetComponent<BoxCollider>().isTrigger = true;
             obj.GetComponent<MeshRenderer>().enabled = false;
+            obj.name = name;
             return obj;
         }
 
@@ -213,6 +223,25 @@ namespace DancingLineFanmade.Level
         {
             float brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
             return brightness > 0.6f ? Color.black : Color.white;
+        }
+
+        public static void DrawDirection(Transform center, float length)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(center.position, center.position + Vector3.right * length);
+            Gizmos.DrawIcon(center.position + Vector3.right * length, "90");
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(center.position, center.position + Vector3.left * length);
+            Gizmos.DrawIcon(center.position + Vector3.left * length, "270");
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(center.position, center.position + Vector3.forward * length);
+            Gizmos.DrawIcon(center.position + Vector3.forward * length, "0");
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(center.position, center.position + Vector3.back * length);
+            Gizmos.DrawIcon(center.position + Vector3.back * length, "180");
         }
     }
 }

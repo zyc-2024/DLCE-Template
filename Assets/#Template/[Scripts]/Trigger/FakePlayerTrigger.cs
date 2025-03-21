@@ -70,5 +70,16 @@ namespace DancingLineFanmade.Trigger
         {
             LevelManager.revivePlayer -= ResetData;
         }
+
+        private void OnDrawGizmos()
+        {
+            if (type == SetType.ChangeDirection)
+            {
+                LevelManager.DrawDirection(transform, 3);
+
+                Gizmos.color = Color.white;
+                Gizmos.DrawWireCube(transform.position, Vector3.one);
+            }
+        }
     }
 }

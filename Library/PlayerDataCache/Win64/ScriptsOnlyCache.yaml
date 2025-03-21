@@ -5,7 +5,9 @@ ScriptsOnlyBuild:
     - DancingLineFanmade.Guidance.GuidanceController
     - DancingLineFanmade.Guidance.GuidanceEnabled
     - DancingLineFanmade.Level.CameraFollower
+    - DancingLineFanmade.Level.FakePlayer
     - DancingLineFanmade.Level.LevelData
+    - DancingLineFanmade.Level.Percentage
     - DancingLineFanmade.Level.Player
     - DancingLineFanmade.Level.PlayerCubes
     - DancingLineFanmade.Level.TimeScale
@@ -20,6 +22,7 @@ ScriptsOnlyBuild:
     - Sirenix.OdinInspector.Editor.GeneralDrawerConfig
     - Sirenix.OdinInspector.Editor.ImportSettingsConfig
     - Sirenix.OdinInspector.Editor.InspectorConfig
+    - Sirenix.OdinInspector.Editor.Modules.OdinModuleConfig
     - Sirenix.Serialization.AOTGenerationConfig
     Sirenix.Serialization.Config.dll:
     - Sirenix.Serialization.GlobalSerializationConfig
@@ -159,49 +162,49 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1574}
     - Class: 114
-      Script: {instanceID: 1796}
+      Script: {instanceID: 1798}
     - Class: 114
-      Script: {instanceID: 2144}
+      Script: {instanceID: 2146}
     - Class: 114
-      Script: {instanceID: 2302}
+      Script: {instanceID: 2304}
     - Class: 114
-      Script: {instanceID: 2490}
+      Script: {instanceID: 2492}
     - Class: 114
-      Script: {instanceID: 2664}
+      Script: {instanceID: 2666}
     - Class: 114
-      Script: {instanceID: 2742}
+      Script: {instanceID: 2744}
     - Class: 114
-      Script: {instanceID: 2962}
+      Script: {instanceID: 2964}
     - Class: 114
-      Script: {instanceID: 3258}
+      Script: {instanceID: 3260}
     - Class: 114
-      Script: {instanceID: 3418}
+      Script: {instanceID: 3420}
     - Class: 114
-      Script: {instanceID: 3446}
+      Script: {instanceID: 3448}
     - Class: 114
-      Script: {instanceID: 3610}
+      Script: {instanceID: 3612}
     - Class: 114
-      Script: {instanceID: 4142}
+      Script: {instanceID: 4144}
     - Class: 114
-      Script: {instanceID: 4320}
+      Script: {instanceID: 4322}
     - Class: 114
-      Script: {instanceID: 4592}
+      Script: {instanceID: 4594}
     - Class: 114
-      Script: {instanceID: 5354}
+      Script: {instanceID: 5356}
     - Class: 114
-      Script: {instanceID: 5948}
+      Script: {instanceID: 5952}
     - Class: 114
-      Script: {instanceID: 5960}
+      Script: {instanceID: 5964}
     - Class: 114
-      Script: {instanceID: 5968}
+      Script: {instanceID: 5972}
     - Class: 114
-      Script: {instanceID: 6676}
+      Script: {instanceID: 6680}
     - Class: 114
-      Script: {instanceID: 7164}
+      Script: {instanceID: 7168}
     - Class: 114
-      Script: {instanceID: 7440}
+      Script: {instanceID: 7446}
     - Class: 114
-      Script: {instanceID: 8050}
+      Script: {instanceID: 8056}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -255,6 +258,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UIElements
     className: PanelRaycaster
+  - hash:
+      serializedVersion: 2
+      Hash: d62aae110db8f9acd0f1c96a8ee6ce45
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Trigger
+    className: PlayAudioClip
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -365,7 +374,7 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: 8092ce49da56f15e2d55648a75c8efb5
+      Hash: 3b0b0ad9a05b76ae816be276fe73651b
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Level
     className: Player
@@ -905,10 +914,16 @@ ScriptsOnlyBuild:
     className: TMP_FontAsset
   - hash:
       serializedVersion: 2
-      Hash: 3bb5033f05928e79830da5fa4ba0cdd6
+      Hash: e96adb391f1822ff62c12013876122f3
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Trigger
     className: EventTrigger
+  - hash:
+      serializedVersion: 2
+      Hash: 9fb0114803c8111abf719f4498f8498b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Level
+    className: GameEvents
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -995,7 +1010,7 @@ ScriptsOnlyBuild:
     className: TextMeshProUGUI
   - hash:
       serializedVersion: 2
-      Hash: 8ffd6b76f77bde8b0a4be7b07cfbdbca
+      Hash: 07a9863a8c53f8e5a077e41ce8cd7086
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Level
     className: FakePlayer
@@ -1131,6 +1146,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Guidance
     className: GuidanceController
+  - hash:
+      serializedVersion: 2
+      Hash: 3745bd02907b85f3219a04b6cf3ce2eb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DancingLineFanmade.Trigger
+    className: Speed
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -1295,11 +1316,11 @@ ScriptsOnlyBuild:
     className: UnityOnSliderValueChangedMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 3745bd02907b85f3219a04b6cf3ce2eb
+      Hash: 9e928cab7fde22e88c506ded7b66ca83
     assemblyName: Assembly-CSharp.dll
     namespaceName: DancingLineFanmade.Trigger
-    className: Speed
+    className: GravityTrigger
   platform: 19
   scenePathNames:
   - Assets/#Template/[Scenes]/Scene.unity
-  playerPath: C:/Users/Administrator/Desktop/AAA/DancingLineFanmade.exe
+  playerPath: C:/Users/Administrator/Desktop/aaaa/DancingLineFanmade.exe

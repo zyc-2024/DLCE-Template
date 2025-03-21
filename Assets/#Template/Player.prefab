@@ -130,12 +130,13 @@ MonoBehaviour:
   levelData: {fileID: 0}
   sceneCamera: {fileID: 0}
   sceneLight: {fileID: 0}
-  characterCollider: {fileID: 8412722892886171499}
   characterMaterial: {fileID: 2100000, guid: 4a9a05847c8609548b12b570d0f8317f, type: 2}
   startPosition: {x: 0, y: 0, z: 0}
   firstDirection: {x: 0, y: 90, z: 0}
   secondDirection: {x: 0, y: 0, z: 0}
   poolSize: 100
-  debugTextColor: {r: 0, g: 0, b: 0, a: 1}
+  playOnStartAnimators: []
+  stopOnDieAnimators: []
   allowTurn: 1
   noDeath: 0
+  drawDirection: 0

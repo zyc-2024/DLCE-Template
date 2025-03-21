@@ -11,7 +11,11 @@ namespace DancingLineFanmade.Trigger
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")) Player.Rigidbody.AddForce(0, power * Player.Rigidbody.mass, 0, ForceMode.Force);
+            if (other.CompareTag("Player"))
+            {
+                Player.Rigidbody.AddForce(0, power * Player.Rigidbody.mass, 0, ForceMode.Force);
+                Player.Instance.Events?.Invoke(7);
+            }
         }
 
 #if UNITY_EDITOR

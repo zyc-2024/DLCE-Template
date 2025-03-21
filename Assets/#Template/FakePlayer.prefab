@@ -134,6 +134,7 @@ MonoBehaviour:
   secondDirection: {x: 0, y: 0, z: 0}
   poolSize: 100
   isWall: 0
+  drawDirection: 0
   createTurnTrigger: 1
   synchronismWithPlayer: 0
   createKey: 112

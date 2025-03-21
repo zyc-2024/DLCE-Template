@@ -32,5 +32,16 @@ namespace DancingLineFanmade.Trigger
                 }
             }
         }
+
+        private void OnDrawGizmos()
+        {
+            if (type == ChangeType.Direction)
+            {
+                LevelManager.DrawDirection(transform, 3);
+
+                Gizmos.color = Color.white;
+                Gizmos.DrawWireCube(transform.position, Vector3.one);
+            }
+        }
     }
 }

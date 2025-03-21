@@ -56,6 +56,7 @@
     <Analyzer Include="E:\Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\#Template\[Scripts]\Trigger\PlayAudioClip.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\TimeScale.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Teleport.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Pyramid.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Level\LevelData.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\ObjectPool.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\ChangeDirection.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Trigger\GravityTrigger.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Checkpoint.cs" />
     <Compile Include="Assets\#Template\[Scripts]\GUI\LoadingPage.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetFog.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Animator\AnimatorBase.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\FakePlayerTrigger.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\EventTrigger.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Level\GameEvents.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetActive.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\FallPredictor.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetAmbient.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="Assets\#Template\[Scripts]\Camera\CameraTrigger.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Animator\LocalRotAnimator.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Guidance\GuidanceController.cs" />
+    <Compile Include="Assets\#Template\[Scripts]\Trigger\Speed.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Camera\CameraFollower.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\Jump.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Level\ActiveByQuality.cs" />
@@ -101,7 +105,6 @@
     <Compile Include="Assets\#Template\[Scripts]\Level\AudioManager.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\PlayAnimator.cs" />
     <Compile Include="Assets\#Template\[Scripts]\Trigger\SetImageColor.cs" />
-    <Compile Include="Assets\#Template\[Scripts]\Trigger\Speed.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\#Template\[Materials]\Shaders\PlaneFog.shader" />

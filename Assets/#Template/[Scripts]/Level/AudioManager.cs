@@ -5,15 +5,16 @@ namespace DancingLineFanmade.Level
 {
     public static class AudioManager
     {
-        public static void PlayClip(AudioClip clip)
+        public static void PlayClip(AudioClip clip, float volume)
         {
-            AudioSource audioSource = new GameObject(clip.name).AddComponent<AudioSource>();
+            AudioSource audioSource = new GameObject("One shot sound: " + clip.name).AddComponent<AudioSource>();
             audioSource.clip = clip;
+            audioSource.volume = volume;
             audioSource.Play();
             Object.Destroy(audioSource.gameObject, clip.length);
         }
 
-        public static AudioSource PlayClip(AudioClip clip, float volume)
+        public static AudioSource PlayTrack(AudioClip clip, float volume)
         {
             AudioSource audioSource = new GameObject(clip.name).AddComponent<AudioSource>();
             audioSource.clip = clip;
@@ -24,22 +25,40 @@ namespace DancingLineFanmade.Level
 
         public static float Time
         {
-            get => Player.Instance.track.time;
+            get => Player.Instance.soundTrack.time;
+            set => Player.Instance.soundTrack.time = value;
+        }
+
+        public static float Pitch
+        {
+            get => Player.Instance.soundTrack.pitch;
+            set => Player.Instance.soundTrack.pitch = value;
+        }
+
+        public static float Volume
+        {
+            get => Player.Instance.soundTrack.volume;
+            set => Player.Instance.soundTrack.volume = value;
         }
 
         public static float Progress
         {
-            get => Player.Instance.track.time / Player.Instance.track.clip.length;
+            get => Player.Instance.soundTrack.time / Player.Instance.soundTrack.clip.length;
         }
 
         public static void Stop()
         {
-            Player.Instance.track.Stop();
+            Player.Instance.soundTrack.Stop();
+        }
+
+        public static void Play()
+        {
+            Player.Instance.soundTrack.Play();
         }
 
         public static Tween FadeOut(float volume, float duration)
         {
-            return Player.Instance.track.DOFade(volume, duration).SetEase(Ease.Linear).OnComplete(new TweenCallback(Stop));
+            return Player.Instance.soundTrack.DOFade(volume, duration).SetEase(Ease.Linear).OnComplete(new TweenCallback(Stop));
         }
     }
 }

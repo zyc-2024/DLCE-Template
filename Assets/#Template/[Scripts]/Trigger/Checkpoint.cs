@@ -93,7 +93,7 @@ namespace DancingLineFanmade.Trigger
             foreach (SingleImage s in imageColorsAuto) s.GetColor();
 
             trackTime = AudioManager.Time;
-            trackProgress = player.trackProgress;
+            trackProgress = player.soundTrackProgress;
             playerSpeed = player.speed;
             sceneGravity = Physics.gravity;
             playerFirstDirection = player.firstDirection;
@@ -134,10 +134,10 @@ namespace DancingLineFanmade.Trigger
             foreach (SingleImage s in imageColorsAuto) s.SetColor();
             foreach (SingleImage s in imageColorsManual) s.SetColor();
 
-            player.track.Stop();
-            player.track.time = trackTime;
-            player.trackProgress = trackProgress;
-            player.track.volume = 1f;
+            AudioManager.Stop();
+            AudioManager.Time = trackTime;
+            AudioManager.Volume = 1f;
+            player.soundTrackProgress = trackProgress;
             player.ClearPool();
             player.blockCount = 0;
             player.speed = playerSpeed;

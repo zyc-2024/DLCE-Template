@@ -15,7 +15,7 @@ namespace DancingLineFanmade.Level
         public AudioClip soundTrack;
         [MinValue(0)] public int speed = 12;
         [MinValue(0f)] public float timeScale = 1f;
-        public Vector3 gravity = new Vector3(0f, -9.3f, 0f);
+        public Vector3 gravity = LevelManager.defaultGravity;
         [TableList] public List<SingleColor> colors = new List<SingleColor>();
 
         internal void SetLevelData()

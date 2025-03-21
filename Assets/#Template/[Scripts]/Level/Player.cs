@@ -40,10 +40,11 @@ namespace DancingLineFanmade.Level
         public List<Animator> stopOnDieAnimators = new List<Animator>();
         public bool allowTurn = true;
         public bool noDeath = false;
+        public bool drawDirection = false;
 
         internal int speed { get; set; }
-        internal AudioSource track { get; private set; }
-        internal int trackProgress { get; set; }
+        internal AudioSource soundTrack { get; private set; }
+        internal int soundTrackProgress { get; set; }
         internal int blockCount { get; set; }
         internal UnityEvent onTurn { get; private set; }
         internal List<Checkpoint> checkpoints { get; set; }
@@ -85,6 +86,12 @@ namespace DancingLineFanmade.Level
         private float lastTime;
         private float fps;
         private const float timeInterval = 0.1f;
+
+        private GameEvents events;
+        public GameEvents Events
+        {
+            get => events ? events : (events = GetComponent<GameEvents>() ? GetComponent<GameEvents>() : null);
+        }
 
         private void Awake()
         {
@@ -141,6 +148,8 @@ namespace DancingLineFanmade.Level
             Instantiate(uiPrefab);
             startPage = Instantiate(startPrefab).GetComponent<StartPage>();
             if (!LoadingPage.Instance) DontDestroyOnLoad(Instantiate(loadingPrefab));
+
+            Events?.Invoke(0);
         }
 
         private void Update()
@@ -151,9 +160,10 @@ namespace DancingLineFanmade.Level
                 loading = true;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            if (Input.GetKeyDown(KeyCode.C) && LevelManager.GameState == GameStatus.Playing) Debug.Log("当前时间：" + track.time);
+            if (Input.GetKeyDown(KeyCode.C) && LevelManager.GameState == GameStatus.Playing) Debug.Log("当前时间：" + AudioManager.Time);
             if (Input.GetKeyDown(KeyCode.D)) debug = !debug;
             if (Input.GetKeyDown(KeyCode.K) && LevelManager.GameState == GameStatus.Playing) LevelManager.PlayerDeath(this, DieReason.Hit, cubesPrefab, null, false);
+            if (Input.GetKeyDown(KeyCode.S) && LevelManager.GameState == GameStatus.Playing) LevelManager.CreateTrigger(selfTransform.position, Vector3.zero, new Vector3(3, 3, 3), false, "CreatedTrigger");
 
             GetFrame();
 #endif
@@ -165,11 +175,12 @@ namespace DancingLineFanmade.Level
                         if (LevelManager.Clicked && !Falling)
                         {
                             LevelManager.GameState = GameStatus.Playing;
-                            if (!track) track = AudioManager.PlayClip(levelData.soundTrack, 1f); else track.Play();
+                            if (!soundTrack) soundTrack = AudioManager.PlayTrack(levelData.soundTrack, 1f); else AudioManager.Play();
                             if (playOnStartAnimators != null) foreach (Animator animator in playOnStartAnimators) animator.speed = 1f;
                             foreach (PlayAnimator a in FindObjectsOfType<PlayAnimator>(true)) foreach (SingleAnimator s in a.animators) if (s.played) s.PlayAnimator();
                             foreach (FakePlayer f in FindObjectsOfType<FakePlayer>(true)) if (f.playing) f.state = FakePlayerState.Moving;
                             CreateTail();
+                            Events?.Invoke(1);
                             if (startPage)
                             {
                                 startPage.Hide();
@@ -193,15 +204,20 @@ namespace DancingLineFanmade.Level
                 if (previousFrameIsGrounded != Falling)
                 {
                     previousFrameIsGrounded = Falling;
-                    if (Falling) tail = null;
+                    if (Falling)
+                    {
+                        tail = null;
+                        Events?.Invoke(3);
+                    }
                     else
                     {
                         CreateTail();
                         Destroy(Instantiate(dustParticle, new Vector3(selfTransform.localPosition.x, selfTransform.localPosition.y - selfTransform.lossyScale.y * 0.5f + 0.2f, selfTransform.localPosition.z), Quaternion.Euler(90f, 0f, 0f)), 2f);
+                        Events?.Invoke(4);
                     }
                 }
             }
-            if (LevelManager.GameState == GameStatus.Playing) trackProgress = track ? (int)(AudioManager.Progress * 100) : 0;
+            if (LevelManager.GameState == GameStatus.Playing) soundTrackProgress = soundTrack ? (int)(AudioManager.Progress * 100) : 0;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -218,6 +234,7 @@ namespace DancingLineFanmade.Level
             selfTransform.eulerAngles = selfTransform.eulerAngles == firstDirection ? secondDirection : firstDirection;
             CreateTail();
             onTurn.Invoke();
+            Events?.Invoke(2);
         }
 
         private void CreateTail()
@@ -299,7 +316,7 @@ namespace DancingLineFanmade.Level
             if (debug)
             {
                 GUI.Label(new Rect(10, 10, 120, 50), "FPS：" + finalFps, style);
-                GUI.Label(new Rect(10, 40, 120, 50), "关卡进度：" + trackProgress + "%", style);
+                GUI.Label(new Rect(10, 40, 120, 50), "关卡进度：" + soundTrackProgress + "%", style);
                 GUI.Label(new Rect(10, 70, 120, 50), "游戏状态：" + LevelManager.GameState, style);
                 GUI.Label(new Rect(10, 100, 120, 50), "线的坐标：" + selfTransform.localPosition, style);
                 GUI.Label(new Rect(10, 130, 120, 50), "线的朝向：" + selfTransform.localEulerAngles, style);
@@ -319,12 +336,17 @@ namespace DancingLineFanmade.Level
                 }
             }
         }
-#endif
+
+        private void OnDrawGizmos()
+        {
+            if (drawDirection) LevelManager.DrawDirection(transform, 4);
+        }
 
         [Button("Get Start Position", ButtonSizes.Large)]
         private void GetStartPosition()
         {
             startPosition = transform.position;
         }
+#endif
     }
 }
